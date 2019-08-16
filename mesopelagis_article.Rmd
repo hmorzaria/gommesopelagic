@@ -1,0 +1,87 @@
+---
+title: "R code for Mesopelagic role in the foodweb article"
+output: html_notebook
+---
+
+Code to produce figures and analysis 
+
+
+```{r Source functions, message=TRUE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# set locale to avoid multibyte errors
+Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
+# https://www.r-bloggers.com/web-scraping-and-invalid-multibyte-string/
+
+#' LIBRARIES
+#' -----------------
+# List of packages for session
+.packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
+              "rnaturalearthhires", "readxl")
+
+# Install CRAN packages (if not already installed)
+.inst <- .packages %in% installed.packages()
+if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst])
+
+# Load packages into session 
+lapply(.packages, require, character.only=TRUE)
+
+# if these packages are not present uncomment and run this code
+# then uncomment before running chunk  
+# remotes::install_github("ropensci/rfishbase")
+#  install.packages('spDataLarge',
+#repos='https://nowosad.github.io/drat/', type='source')
+#  devtools::install_github("ropenscilabs/rnaturalearth")
+#  devtools::install_github("ropenscilabs/rnaturalearthdata")
+#  install.packages("rnaturalearthhires",
+#                 repos = "http://packages.ropensci.org",
+#                 type = "source")
+
+
+lapply(.packages, require, character.only=TRUE)
+
+source("map_polygons.R")
+source("fishbase_data.R")
+```
+
+Map of study area showing Atlantis polygons
+```{r Make map, echo=TRUE, message=FALSE, warning=FALSE}
+#scale factor is how much distance to add in the edges of the map, units are dependent on the coordinate system of the shapefile
+#bar position can be top or bottom (t,b) or left or right (l,r)
+
+model.map <- make_map(shape.file="GOM_LL.shp", file.name = "gom_model_map.png", scale.factor = 2, bar.position = "tl")
+
+model.map
+
+```
+
+Retrieve habitat for species in each functional group to classify in guilds
+
+```{r get_habitatdata, message=FALSE, warning=FALSE}
+
+atlantis.groups <- read_xlsx("Species_lists.xlsx", sheet = "group_names")
+
+group.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") %>% 
+  dplyr::rename(old_name=scientific_name)
+
+species.list <- group.composition$old_name
+
+fish.habitat <- lapply(species.list, get_fishbase) %>% 
+  bind_rows
+
+head(fish.habitat)
+
+common.habitat <- fish.habitat %>% 
+  left_join(group.composition, by="old_name") %>% 
+  group_by(group,DemersPelag) %>%
+  tally() %>% 
+  top_n(1,n) %>% 
+  mutate(habitat_classification = str_to_title(DemersPelag)) %>% 
+  dplyr::select(-DemersPelag)
+  
+head(common.habitat)
+
+write_csv(common.habitat, "habitat_fish_categories.csv")
+
+
+```
+
