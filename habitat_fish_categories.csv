@@ -1,0 +1,56 @@
+group,n,habitat_classification
+Benthic feeding sharks,4,Bathydemersal
+Bioeroding fish,7,Reef-Associated
+Black drum,1,Demersal
+Blacktip shark,1,Reef-Associated
+Blue marlin,1,Pelagic-Oceanic
+Bluefin tuna,1,Pelagic-Oceanic
+Deep serranidae,10,Demersal
+Deep water fish,89,Bathypelagic
+Filter feeding sharks,2,Pelagic-Oceanic
+Flatfish,25,Demersal
+Gag grouper,1,Reef-Associated
+Greater amberjack,1,Reef-Associated
+Jacks,14,Reef-Associated
+King mackerel (KMK) - 1,1,Reef-Associated
+Ladyfish,1,Pelagic-Neritic
+Ladyfish,1,Reef-Associated
+Large pelagic fish,15,Pelagic-Oceanic
+Large reef fish,40,Reef-Associated
+Large sharks,11,Reef-Associated
+Little tunny,1,Reef-Associated
+Lutjanidae,10,Reef-Associated
+Medium pelagic fish,8,Pelagic-Oceanic
+Menhaden,3,Pelagic-Neritic
+Mullets,1,Benthopelagic
+Mullets,1,Demersal
+Mullets,1,Pelagic-Neritic
+Mullets,1,Reef-Associated
+Other billfish,3,Pelagic-Oceanic
+Other demersal fish,46,Demersal
+Other demersal fish,46,Reef-Associated
+Other tuna,2,Pelagic-Neritic
+Pinfish,1,Demersal
+Pompano,2,Reef-Associated
+Red drum,1,Demersal
+Red grouper,1,Reef-Associated
+Red snapper,1,Reef-Associated
+Scamp,1,Reef-Associated
+Sciaenidae,11,Demersal
+Seatrout,3,Demersal
+Shallow serranidae,22,Reef-Associated
+Sheepshead,1,Reef-Associated
+Skates and rays,15,Demersal
+Small demersal fish,87,Bathypelagic
+Small pelagic fish,23,Pelagic-Neritic
+Small reef fish,82,Reef-Associated
+Small sharks,7,Bathydemersal
+Snook,1,Benthopelagic
+Snook,1,Demersal
+Snook,1,Reef-Associated
+Spanish mackerel,7,Benthopelagic
+Spanish sardine,1,Reef-Associated
+Swordfish,1,Pelagic-Oceanic
+Vermilion snapper,1,Demersal
+White marlin,1,Pelagic-Oceanic
+Yellowfin tuna,1,Pelagic-Oceanic
