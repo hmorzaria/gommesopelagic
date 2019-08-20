@@ -35,6 +35,7 @@ vignettes/*.pdf
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 .Rproj.user
+<<<<<<< HEAD
 
 #Atlantis results
 *.nc
@@ -45,3 +46,5 @@ rsconnect/
 #figures
 *.png
 *.jpeg
+=======
+>>>>>>> parent of a1f6f1d... Added code to retrieve habitat data from Fishbase
