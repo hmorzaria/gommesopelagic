@@ -15,9 +15,14 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 #' LIBRARIES
 #' -----------------
 # List of packages for session
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("affyio")
+
 .packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
               "rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
-              "colorRamps","colorspace")
+              "colorRamps","colorspace","RNetCDF")
 
 # Install CRAN packages (if not already installed)
 .inst <- .packages %in% installed.packages()
@@ -43,6 +48,7 @@ lapply(.packages, require, character.only=TRUE)
 source("map_polygons.R")
 source("fishbase_data.R")
 source("foodweb_diagram.R")
+
 ```
 
 Map of study area showing Atlantis polygons
@@ -91,5 +97,15 @@ write_csv(common.habitat, "habitat_fish_categories.csv")
 foodweb_map<- diet_plot(preynames="prey_names.csv", groupnames="Group_Names.csv", availabilitymatrix = "availabilities_matrix.csv", filename="gom_foodweb.png")
 
 foodweb_map
+```
+
+
+Sourcing this file will extract mortality and growth scalars from the forcing file used to model the impacts of Deep Water Horizon in Ainsworth et al. 2018. for Small demersal fish, Deep water fish, and Other Demersal Fish.
+
+
+```{r extract forcing, include=FALSE}
+
+source("modify_forcing.R")
+
 ```
 

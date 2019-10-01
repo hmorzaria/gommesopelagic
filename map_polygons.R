@@ -22,7 +22,7 @@ if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst])
 # Load packages into session 
 lapply(.packages, require, character.only=TRUE)
 
-make_map <- function(shape.file, file.name) {
+make_map <- function(shape.file, file.name,scale.factor, bar.position) {
 
   model.shape <- readOGR(shape.file)
   
@@ -35,10 +35,10 @@ make_map <- function(shape.file, file.name) {
   world_points<- st_centroid(world)
   world_points <- cbind(world, st_coordinates(st_centroid(world$geometry)))
   
-  min.long <- min(model.shape.df$long)-3
-  max.long <- max(model.shape.df$long)+2
-  min.lat <- min(model.shape.df$lat)-2
-  max.lat <- max(model.shape.df$lat)+3
+  min.long <- min(model.shape.df$long)-scale.factor
+  max.long <- max(model.shape.df$long)+scale.factor
+  min.lat <- min(model.shape.df$lat)-scale.factor
+  max.lat <- max(model.shape.df$lat)+scale.factor
   
   
   model.map <- ggplot(data = world) +
@@ -63,4 +63,4 @@ make_map <- function(shape.file, file.name) {
   
 }
 
-make_map(shape.file="GOM_LL.shp", file.name = "gom_model_map.png")
+make_map(shape.file="GOM_LL.shp", file.name = "gom_model_map.png",scale.factor = 2, bar.position = "tl")
