@@ -14,6 +14,9 @@
 # Output files from R CMD check
 /*.Rcheck/
 
+#credential for batch processing
+*.json
+
 # RStudio files
 .Rproj.user/
 
@@ -46,11 +49,12 @@ rsconnect/
 #figures
 *.png
 *.jpeg
-=======
->>>>>>> parent of a1f6f1d... Added code to retrieve habitat data from Fishbase
+
 
 #Atlantis model files and code from Morzaria et al. 2018
 GOMAtlantis_nooil/
 GOMAtlantis_oil_1000Factor_363Thresh/
 gomcode/
+pdfs/
+prms/
 

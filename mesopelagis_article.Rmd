@@ -20,13 +20,19 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 
 #BiocManager::install("affyio")
 
+# sudo apt-get install libmpfr-dev
+# sudo apt-get install libgmp-dev
+#install.packages("hydromad", repos="http://hydromad.catchment.org")
+
+
 .packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
               "rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
-              "colorRamps","colorspace","RNetCDF")
+              "colorRamps","colorspace","RNetCDF","polynom","hydromad","parallel",
+              "doSNOW","gmp","car","Rmpfr", "rAzureBatch", "doAzureParallel","doSNOW")
 
 # Install CRAN packages (if not already installed)
 .inst <- .packages %in% installed.packages()
-if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst])
+if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst], dependencies = TRUE)
 
 # Load packages into session 
 lapply(.packages, require, character.only=TRUE)
@@ -45,9 +51,13 @@ lapply(.packages, require, character.only=TRUE)
 
 lapply(.packages, require, character.only=TRUE)
 
+setwd("~/gommesopelagic")
+
 source("map_polygons.R")
 source("fishbase_data.R")
 source("foodweb_diagram.R")
+source("gom_diet_matrix.R")
+
 
 ```
 
@@ -106,6 +116,89 @@ Sourcing this file will extract mortality and growth scalars from the forcing fi
 ```{r extract forcing, include=FALSE}
 
 source("modify_forcing.R")
+
+```
+
+Draw valueCreate availability matrices based on Dirichelet distribution
+```{r}
+
+betapath <- "~/gommesopelagic/pdfs"
+workpath <- "~/gommesopelagic"
+savepath <- "~/gommesopelagic/prms"
+
+dir.create(savepath)
+
+#set number of permutations, different versions of availability matrix
+
+
+prey.data.stat <- get_pprey(preynames = "prey_names.csv", functionalgroups="Group_Names.csv", availabilities = "availabilities_matrix.csv")
+
+make_availabilities(prey.data.stat, permutations = 1000, betapath, workpath, savepath)
+
+permutations <- 1000
+perm.vector <- 1:permutations
+
+NumberOfCluster <- detectCores() - 1
+cl <- parallel::makeCluster(NumberOfCluster)
+registerDoSNOW(cl)
+
+mclapply(perm.vector, make_prm, headerfile= "GOM_PRM_2015_header.prm", footerfile = "GOM_PRM_2015_footer.prm", beta.data= "beta_data.csv", beta.name.frame="beta_name_frame.csv", ad.adult.prey.data = "ad_adult_prey_data.csv", juv.prey.data= "juv_prey_data.csv", prey.frame.names = "prey_frame_names.csv", mc.cores = NumberOfCluster)
+
+```
+
+Run 1000 Atlantis simulations using a cluster
+```{r}
+#Run using AzureDoParallel
+#https://github.com/Azure/doAzureParallel/
+
+#nodes use the Data Science VM, specs are here
+# https://docs.microsoft.com/en-us/azure/machine-learning/data-science-virtual-machine/overview
+# and run a Docker image
+#https://hub.docker.com/r/rocker/r-ver/
+
+#run this the first time 
+# 1. Generate your credential and cluster configuration files.  
+#generateClusterConfig("cluster.json")
+#generateCredentialsConfig("credentials.json")
+
+# 2. Fill out your credential config and cluster config files.
+# Enter your Azure Batch Account & Azure Storage keys/account-info into your credential config ("credentials.json") and configure your cluster in your cluster config ("cluster.json")
+# paste this in an Azure cloud shell https://shell.azure.com/
+# wget -q https://raw.githubusercontent.com/Azure/doAzureParallel/master/account_setup.sh &&
+#   chmod 755 account_setup.sh &&
+#   /bin/bash account_setup.sh
+
+# 3. Set your credentials - you need to give the R session your credentials to interact with Azure
+setCredentials("credentials.json")
+
+# 4. Register the pool. This will create a new pool if your pool hasn't already been provisioned.
+cluster <- makeCluster("cluster.json")
+
+# 5. Register the pool as your parallel backend
+registerDoAzureParallel(cluster)
+
+# 6. Check that your parallel backend has been registered
+getDoParWorkers()
+
+
+
+setVerbose(TRUE)
+# This will set a global setting to keep job and its result after run is completed. 
+setAutoDeleteJob(FALSE)
+
+# getClusterFile(cluster, "tvm-1170471534_1-20180620t185706z", "stderr.txt", downloadPath = "~/climatemodels/pool-errors.txt")
+
+permutations  <- 1000
+
+permutation.list <- 1:permutations
+
+
+source("gom_simulations_cluster.R")
+
+# 7. shut down your pool
+#stopCluster(cluster)
+
+
 
 ```
 

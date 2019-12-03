@@ -1,0 +1,1010 @@
+predator name,prey name
+benthic feeding sharks,shallow serranidae
+benthic feeding sharks,large reef fish
+benthic feeding sharks,small reef fish
+benthic feeding sharks,other demersal fish
+benthic feeding sharks,large pelagic fish
+benthic feeding sharks,deep water fish
+benthic feeding sharks,pinfish
+benthic feeding sharks,medium pelagic fish
+benthic feeding sharks,small pelagic fish
+benthic feeding sharks,large sharks
+benthic feeding sharks,other shrimp
+benthic feeding sharks,dolphins and porpoises
+benthic feeding sharks,blue crab
+benthic feeding sharks,carnivorous macrobenthos
+benthic feeding sharks,infaunal meiobenthos
+benthic feeding sharks,bivalves
+benthic feeding sharks,sessile filter feeders
+benthic feeding sharks,sea grass
+benthic feeding sharks,macroalgae
+benthic feeding sharks,small phytoplankton
+benthic feeding sharks,squid
+benthic feeding sharks,large zooplankton
+benthic feeding sharks,small zooplankton
+benthic feeding sharks,labile detritus
+benthic feeding sharks,refractory detritus
+bioeroding fish,small demersal fish
+bioeroding fish,other shrimp
+bioeroding fish,crabs and lobsters
+bioeroding fish,stony corals
+bioeroding fish,sponges
+bioeroding fish,carnivorous macrobenthos
+bioeroding fish,infaunal meiobenthos
+bioeroding fish,herbivorous echinoderms
+bioeroding fish,bivalves
+bioeroding fish,sessile filter feeders
+bioeroding fish,sea grass
+bioeroding fish,macroalgae
+bioeroding fish,small zooplankton
+black drum,other demersal fish
+black drum,small demersal fish
+black drum,brown shrimp
+black drum,other shrimp
+black drum,stone crab
+black drum,crabs and lobsters
+black drum,carnivorous macrobenthos
+black drum,herbivorous echinoderms
+black drum,sessile filter feeders
+black drum,sea grass
+black drum,small phytoplankton
+black drum,protists
+black drum,large zooplankton
+black drum,small zooplankton
+black drum,carrion detritus
+black drum,labile detritus
+black drum,refractory detritus
+blacktip shark,dolphins and porpoises
+blacktip shark,carnivorous macrobenthos
+blacktip shark,bivalves
+blacktip shark,macroalgae
+blacktip shark,squid
+blue crab,infaunal meiobenthos
+blue crab,sessile filter feeders
+blue crab,small phytoplankton
+blue crab,jellyfish
+blue marlin,large phytoplankton
+bluefin tuna,bluefin tuna
+bluefin tuna,other tuna
+bluefin tuna,small pelagic fish
+deep serranidae,shallow serranidae
+deep serranidae,large reef fish
+deep serranidae,small reef fish
+deep serranidae,sciaenidae
+deep serranidae,other demersal fish
+deep serranidae,small demersal fish
+deep serranidae,other shrimp
+deep serranidae,carnivorous macrobenthos
+deep serranidae,infaunal meiobenthos
+deep serranidae,herbivorous echinoderms
+deep serranidae,bivalves
+deep serranidae,jellyfish
+deep serranidae,squid
+deep serranidae,large zooplankton
+deep serranidae,small zooplankton
+deep serranidae,carrion detritus
+deepwater fish,shallow serranidae
+deepwater fish,deep serranidae
+deepwater fish,lutjanidae
+deepwater fish,large reef fish
+deepwater fish,other demersal fish
+deepwater fish,small demersal fish
+deepwater fish,deep water fish
+deepwater fish,pinfish
+deepwater fish,small pelagic fish
+deepwater fish,brown shrimp
+deepwater fish,other shrimp
+deepwater fish,crabs and lobsters
+deepwater fish,carnivorous macrobenthos
+deepwater fish,infaunal meiobenthos
+deepwater fish,herbivorous echinoderms
+deepwater fish,bivalves
+deepwater fish,sessile filter feeders
+deepwater fish,large phytoplankton
+deepwater fish,small phytoplankton
+deepwater fish,jellyfish
+deepwater fish,squid
+deepwater fish,large zooplankton
+deepwater fish,small zooplankton
+flatfish,shallow serranidae
+flatfish,bioeroding fish
+flatfish,large reef fish
+flatfish,small reef fish
+flatfish,sciaenidae
+flatfish,flatfish
+flatfish,other demersal fish
+flatfish,small demersal fish
+flatfish,jacks
+flatfish,pinfish
+flatfish,medium pelagic fish
+flatfish,small pelagic fish
+flatfish,brown shrimp
+flatfish,pink shrimp
+flatfish,other shrimp
+flatfish,blue crab
+flatfish,stone crab
+flatfish,crabs and lobsters
+flatfish,stony corals
+flatfish,sponges
+flatfish,carnivorous macrobenthos
+flatfish,infaunal meiobenthos
+flatfish,herbivorous echinoderms
+flatfish,bivalves
+flatfish,sessile filter feeders
+flatfish,sea grass
+flatfish,macroalgae
+flatfish,large phytoplankton
+flatfish,small phytoplankton
+flatfish,protists
+flatfish,jellyfish
+flatfish,squid
+flatfish,large zooplankton
+flatfish,small zooplankton
+flatfish,carrion detritus
+flatfish,labile detritus
+flatfish,refractory detritus
+gag grouper,shallow serranidae
+gag grouper,vermilion snapper
+gag grouper,lutjanidae
+gag grouper,large reef fish
+gag grouper,small reef fish
+gag grouper,sciaenidae
+gag grouper,mullets
+gag grouper,flatfish
+gag grouper,other demersal fish
+gag grouper,small demersal fish
+gag grouper,jacks
+gag grouper,large pelagic fish
+gag grouper,menhaden
+gag grouper,pinfish
+gag grouper,small pelagic fish
+gag grouper,skates and rays
+gag grouper,brown shrimp
+gag grouper,white shrimp
+gag grouper,pink shrimp
+gag grouper,other shrimp
+gag grouper,blue crab
+gag grouper,crabs and lobsters
+gag grouper,stony corals
+gag grouper,carnivorous macrobenthos
+gag grouper,infaunal meiobenthos
+gag grouper,herbivorous echinoderms
+gag grouper,bivalves
+gag grouper,sessile filter feeders
+gag grouper,sea grass
+gag grouper,small phytoplankton
+gag grouper,jellyfish
+gag grouper,squid
+gag grouper,large zooplankton
+gag grouper,small zooplankton
+gag grouper,carrion detritus
+gag grouper,labile detritus
+gag grouper,refractory detritus
+greater amberjack,shallow serranidae
+greater amberjack,small reef fish
+greater amberjack,sciaenidae
+greater amberjack,flatfish
+greater amberjack,other demersal fish
+greater amberjack,jacks
+greater amberjack,deep water fish
+greater amberjack,pinfish
+greater amberjack,small pelagic fish
+greater amberjack,other shrimp
+greater amberjack,carnivorous macrobenthos
+greater amberjack,squid
+jacks,large reef fish
+jacks,sciaenidae
+jacks,sheepshead
+jacks,flatfish
+jacks,other demersal fish
+jacks,small demersal fish
+jacks,jacks
+jacks,large pelagic fish
+jacks,deep water fish
+jacks,pinfish
+jacks,medium pelagic fish
+jacks,small pelagic fish
+jacks,pink shrimp
+jacks,other shrimp
+jacks,blue crab
+jacks,crabs and lobsters
+jacks,crustose coralline algae
+jacks,sponges
+jacks,carnivorous macrobenthos
+jacks,infaunal meiobenthos
+jacks,herbivorous echinoderms
+jacks,bivalves
+jacks,sessile filter feeders
+jacks,sea grass
+jacks,large phytoplankton
+jacks,small phytoplankton
+jacks,protists
+jacks,jellyfish
+jacks,squid
+jacks,large zooplankton
+jacks,small zooplankton
+jacks,carrion detritus
+jacks,labile detritus
+jacks,refractory detritus
+king mackerel,shallow serranidae
+king mackerel,red snapper
+king mackerel,vermilion snapper
+king mackerel,lutjanidae
+king mackerel,bioeroding fish
+king mackerel,large reef fish
+king mackerel,small reef fish
+king mackerel,seatrout
+king mackerel,sciaenidae
+king mackerel,ladyfish
+king mackerel,mullets
+king mackerel,pompano
+king mackerel,sheepshead
+king mackerel,flatfish
+king mackerel,other demersal fish
+king mackerel,small demersal fish
+king mackerel,little tunny
+king mackerel,other tuna
+king mackerel,jacks
+king mackerel,spanish mackerel
+king mackerel,large pelagic fish
+king mackerel,deep water fish
+king mackerel,menhaden
+king mackerel,pinfish
+king mackerel,medium pelagic fish
+king mackerel,brown shrimp
+king mackerel,pink shrimp
+king mackerel,other shrimp
+king mackerel,surface feeding birds
+king mackerel,blue crab
+king mackerel,crabs and lobsters
+king mackerel,stony corals
+king mackerel,carnivorous macrobenthos
+king mackerel,infaunal meiobenthos
+king mackerel,sea grass
+king mackerel,macroalgae
+king mackerel,squid
+king mackerel,small zooplankton
+king mackerel,labile detritus
+ladyfish,shallow serranidae
+ladyfish,bioeroding fish
+ladyfish,other demersal fish
+ladyfish,small demersal fish
+ladyfish,pink shrimp
+ladyfish,other shrimp
+ladyfish,crabs and lobsters
+ladyfish,carnivorous macrobenthos
+ladyfish,infaunal meiobenthos
+ladyfish,bivalves
+ladyfish,sessile filter feeders
+ladyfish,sea grass
+ladyfish,large zooplankton
+ladyfish,small zooplankton
+ladyfish,labile detritus
+ladyfish,refractory detritus
+large pelagic fish,large reef fish
+large pelagic fish,flatfish
+large pelagic fish,other demersal fish
+large pelagic fish,small demersal fish
+large pelagic fish,little tunny
+large pelagic fish,other tuna
+large pelagic fish,other billfish
+large pelagic fish,jacks
+large pelagic fish,large pelagic fish
+large pelagic fish,deep water fish
+large pelagic fish,pinfish
+large pelagic fish,medium pelagic fish
+large pelagic fish,small pelagic fish
+large pelagic fish,pink shrimp
+large pelagic fish,other shrimp
+large pelagic fish,blue crab
+large pelagic fish,crabs and lobsters
+large pelagic fish,carnivorous macrobenthos
+large pelagic fish,infaunal meiobenthos
+large pelagic fish,bivalves
+large pelagic fish,sessile filter feeders
+large pelagic fish,sea grass
+large pelagic fish,macroalgae
+large pelagic fish,large phytoplankton
+large pelagic fish,small phytoplankton
+large pelagic fish,squid
+large pelagic fish,large zooplankton
+large pelagic fish,small zooplankton
+large reef fish,shallow serranidae
+large reef fish,deep serranidae
+large reef fish,large reef fish
+large reef fish,small reef fish
+large reef fish,sciaenidae
+large reef fish,flatfish
+large reef fish,other demersal fish
+large reef fish,small demersal fish
+large reef fish,jacks
+large reef fish,deep water fish
+large reef fish,menhaden
+large reef fish,pinfish
+large reef fish,medium pelagic fish
+large reef fish,small pelagic fish
+large reef fish,brown shrimp
+large reef fish,other shrimp
+large reef fish,crabs and lobsters
+large reef fish,stony corals
+large reef fish,crustose coralline algae
+large reef fish,sponges
+large reef fish,carnivorous macrobenthos
+large reef fish,infaunal meiobenthos
+large reef fish,herbivorous echinoderms
+large reef fish,bivalves
+large reef fish,sessile filter feeders
+large reef fish,sea grass
+large reef fish,macroalgae
+large reef fish,large phytoplankton
+large reef fish,small phytoplankton
+large reef fish,protists
+large reef fish,jellyfish
+large reef fish,squid
+large reef fish,large zooplankton
+large reef fish,small zooplankton
+large reef fish,carrion detritus
+large reef fish,labile detritus
+large reef fish,refractory detritus
+large sharks,bioeroding fish
+large sharks,large reef fish
+large sharks,small reef fish
+large sharks,sciaenidae
+large sharks,mullets
+large sharks,flatfish
+large sharks,other demersal fish
+large sharks,small demersal fish
+large sharks,jacks
+large sharks,large pelagic fish
+large sharks,deep water fish
+large sharks,pinfish
+large sharks,medium pelagic fish
+large sharks,small pelagic fish
+large sharks,large sharks
+large sharks,skates and rays
+large sharks,other shrimp
+large sharks,diving birds
+large sharks,surface feeding birds
+large sharks,dolphins and porpoises
+large sharks,loggerhead
+large sharks,crabs and lobsters
+large sharks,carnivorous macrobenthos
+large sharks,infaunal meiobenthos
+large sharks,herbivorous echinoderms
+large sharks,bivalves
+large sharks,macroalgae
+large sharks,large phytoplankton
+large sharks,small phytoplankton
+large sharks,squid
+large sharks,large zooplankton
+large sharks,small zooplankton
+large sharks,labile detritus
+little tunny,shallow serranidae
+little tunny,vermilion snapper
+little tunny,lutjanidae
+little tunny,large reef fish
+little tunny,small reef fish
+little tunny,seatrout
+little tunny,sciaenidae
+little tunny,flatfish
+little tunny,other demersal fish
+little tunny,small demersal fish
+little tunny,large pelagic fish
+little tunny,menhaden
+little tunny,pinfish
+little tunny,brown shrimp
+little tunny,other shrimp
+little tunny,crabs and lobsters
+little tunny,infaunal meiobenthos
+little tunny,herbivorous echinoderms
+little tunny,bivalves
+little tunny,sea grass
+little tunny,macroalgae
+little tunny,small phytoplankton
+little tunny,large zooplankton
+little tunny,small zooplankton
+lutjanidae,shallow serranidae
+lutjanidae,deep serranidae
+lutjanidae,vermilion snapper
+lutjanidae,lutjanidae
+lutjanidae,bioeroding fish
+lutjanidae,large reef fish
+lutjanidae,small reef fish
+lutjanidae,seatrout
+lutjanidae,sciaenidae
+lutjanidae,mullets
+lutjanidae,sheepshead
+lutjanidae,flatfish
+lutjanidae,other demersal fish
+lutjanidae,small demersal fish
+lutjanidae,jacks
+lutjanidae,menhaden
+lutjanidae,pinfish
+lutjanidae,small pelagic fish
+lutjanidae,brown shrimp
+lutjanidae,white shrimp
+lutjanidae,pink shrimp
+lutjanidae,blue crab
+lutjanidae,stone crab
+lutjanidae,crabs and lobsters
+lutjanidae,stony corals
+lutjanidae,crustose coralline algae
+lutjanidae,carnivorous macrobenthos
+lutjanidae,infaunal meiobenthos
+lutjanidae,herbivorous echinoderms
+lutjanidae,bivalves
+lutjanidae,sessile filter feeders
+lutjanidae,sea grass
+lutjanidae,macroalgae
+lutjanidae,large phytoplankton
+lutjanidae,small phytoplankton
+lutjanidae,protists
+lutjanidae,jellyfish
+lutjanidae,squid
+lutjanidae,large zooplankton
+lutjanidae,small zooplankton
+lutjanidae,carrion detritus
+lutjanidae,labile detritus
+lutjanidae,refractory detritus
+medium pelagic fish,medium pelagic fish
+medium pelagic fish,carnivorous macrobenthos
+medium pelagic fish,macroalgae
+medium pelagic fish,large phytoplankton
+medium pelagic fish,small phytoplankton
+medium pelagic fish,large zooplankton
+medium pelagic fish,carrion detritus
+menhaden,other shrimp
+menhaden,crabs and lobsters
+menhaden,carnivorous macrobenthos
+menhaden,infaunal meiobenthos
+menhaden,sessile filter feeders
+menhaden,sea grass
+menhaden,macroalgae
+menhaden,toxic dinoflagellates
+menhaden,protists
+mullets,other demersal fish
+mullets,other shrimp
+mullets,crabs and lobsters
+mullets,carnivorous macrobenthos
+mullets,infaunal meiobenthos
+mullets,herbivorous echinoderms
+mullets,bivalves
+mullets,sessile filter feeders
+mullets,sea grass
+mullets,macroalgae
+mullets,large phytoplankton
+mullets,small phytoplankton
+mullets,protists
+mullets,small zooplankton
+mullets,carrion detritus
+other demersal fish,shallow serranidae
+other demersal fish,deep serranidae
+other demersal fish,vermilion snapper
+other demersal fish,lutjanidae
+other demersal fish,bioeroding fish
+other demersal fish,large reef fish
+other demersal fish,small reef fish
+other demersal fish,seatrout
+other demersal fish,sciaenidae
+other demersal fish,flatfish
+other demersal fish,other demersal fish
+other demersal fish,small demersal fish
+other demersal fish,jacks
+other demersal fish,large pelagic fish
+other demersal fish,pinfish
+other demersal fish,medium pelagic fish
+other demersal fish,small pelagic fish
+other demersal fish,brown shrimp
+other demersal fish,pink shrimp
+other demersal fish,other shrimp
+other demersal fish,blue crab
+other demersal fish,crabs and lobsters
+other demersal fish,stony corals
+other demersal fish,crustose coralline algae
+other demersal fish,sponges
+other demersal fish,carnivorous macrobenthos
+other demersal fish,infaunal meiobenthos
+other demersal fish,herbivorous echinoderms
+other demersal fish,bivalves
+other demersal fish,sessile filter feeders
+other demersal fish,sea grass
+other demersal fish,macroalgae
+other demersal fish,large phytoplankton
+other demersal fish,small phytoplankton
+other demersal fish,protists
+other demersal fish,jellyfish
+other demersal fish,squid
+other demersal fish,large zooplankton
+other demersal fish,small zooplankton
+other demersal fish,carrion detritus
+other demersal fish,labile detritus
+other demersal fish,refractory detritus
+other tuna,shallow serranidae
+other tuna,large reef fish
+other tuna,small reef fish
+other tuna,seatrout
+other tuna,mullets
+other tuna,other demersal fish
+other tuna,small demersal fish
+other tuna,jacks
+other tuna,spanish mackerel
+other tuna,large pelagic fish
+other tuna,small pelagic fish
+other tuna,other shrimp
+other tuna,crabs and lobsters
+other tuna,carnivorous macrobenthos
+other tuna,infaunal meiobenthos
+other tuna,bivalves
+other tuna,sea grass
+other tuna,macroalgae
+other tuna,small phytoplankton
+other tuna,squid
+other tuna,large zooplankton
+other tuna,small zooplankton
+other tuna,labile detritus
+pinfish,other demersal fish
+pinfish,small demersal fish
+pinfish,medium pelagic fish
+pinfish,small pelagic fish
+pinfish,brown shrimp
+pinfish,other shrimp
+pinfish,blue crab
+pinfish,crabs and lobsters
+pinfish,sponges
+pinfish,carnivorous macrobenthos
+pinfish,infaunal meiobenthos
+pinfish,herbivorous echinoderms
+pinfish,bivalves
+pinfish,sessile filter feeders
+pinfish,sea grass
+pinfish,macroalgae
+pinfish,large phytoplankton
+pinfish,small phytoplankton
+pinfish,protists
+pinfish,jellyfish
+pinfish,squid
+pinfish,large zooplankton
+pinfish,small zooplankton
+pinfish,carrion detritus
+pinfish,labile detritus
+pinfish,refractory detritus
+pompano,other demersal fish
+pompano,small demersal fish
+pompano,crabs and lobsters
+pompano,herbivorous echinoderms
+pompano,sea grass
+pompano,carrion detritus
+red drum,lutjanidae
+red drum,large reef fish
+red drum,small reef fish
+red drum,sciaenidae
+red drum,mullets
+red drum,flatfish
+red drum,other demersal fish
+red drum,small demersal fish
+red drum,jacks
+red drum,menhaden
+red drum,pinfish
+red drum,small pelagic fish
+red drum,brown shrimp
+red drum,pink shrimp
+red drum,other shrimp
+red drum,blue crab
+red drum,stone crab
+red drum,crabs and lobsters
+red drum,crustose coralline algae
+red drum,sponges
+red drum,carnivorous macrobenthos
+red drum,infaunal meiobenthos
+red drum,herbivorous echinoderms
+red drum,bivalves
+red drum,sessile filter feeders
+red drum,sea grass
+red drum,large phytoplankton
+red drum,small phytoplankton
+red drum,protists
+red drum,jellyfish
+red drum,squid
+red drum,large zooplankton
+red drum,small zooplankton
+red drum,carrion detritus
+red drum,labile detritus
+red drum,refractory detritus
+red grouper,shallow serranidae
+red grouper,large reef fish
+red grouper,small reef fish
+red grouper,other demersal fish
+red grouper,small demersal fish
+red grouper,small pelagic fish
+red grouper,other shrimp
+red grouper,carnivorous macrobenthos
+red grouper,infaunal meiobenthos
+red grouper,small phytoplankton
+red grouper,squid
+red snapper,shallow serranidae
+red snapper,deep serranidae
+red snapper,vermilion snapper
+red snapper,lutjanidae
+red snapper,large reef fish
+red snapper,small reef fish
+red snapper,seatrout
+red snapper,mullets
+red snapper,small demersal fish
+red snapper,jacks
+red snapper,small pelagic fish
+red snapper,brown shrimp
+red snapper,pink shrimp
+red snapper,other shrimp
+red snapper,surface feeding birds
+red snapper,blue crab
+red snapper,crabs and lobsters
+red snapper,carnivorous macrobenthos
+red snapper,infaunal meiobenthos
+red snapper,herbivorous echinoderms
+red snapper,bivalves
+red snapper,sessile filter feeders
+red snapper,macroalgae
+red snapper,small phytoplankton
+red snapper,jellyfish
+red snapper,squid
+red snapper,large zooplankton
+red snapper,small zooplankton
+red snapper,carrion detritus
+red snapper,labile detritus
+scamp,small reef fish
+scamp,small demersal fish
+scamp,small pelagic fish
+scamp,other shrimp
+scamp,crabs and lobsters
+scamp,carnivorous macrobenthos
+scamp,infaunal meiobenthos
+scamp,bivalves
+scamp,squid
+scamp,small zooplankton
+scamp,labile detritus
+sciaenidae,large reef fish
+sciaenidae,small reef fish
+sciaenidae,sciaenidae
+sciaenidae,flatfish
+sciaenidae,other demersal fish
+sciaenidae,small demersal fish
+sciaenidae,jacks
+sciaenidae,large pelagic fish
+sciaenidae,pinfish
+sciaenidae,small pelagic fish
+sciaenidae,brown shrimp
+sciaenidae,pink shrimp
+sciaenidae,other shrimp
+sciaenidae,blue crab
+sciaenidae,crabs and lobsters
+sciaenidae,stony corals
+sciaenidae,crustose coralline algae
+sciaenidae,sponges
+sciaenidae,carnivorous macrobenthos
+sciaenidae,infaunal meiobenthos
+sciaenidae,herbivorous echinoderms
+sciaenidae,bivalves
+sciaenidae,sessile filter feeders
+sciaenidae,sea grass
+sciaenidae,macroalgae
+sciaenidae,large phytoplankton
+sciaenidae,small phytoplankton
+sciaenidae,protists
+sciaenidae,jellyfish
+sciaenidae,squid
+sciaenidae,large zooplankton
+sciaenidae,small zooplankton
+sciaenidae,carrion detritus
+sciaenidae,labile detritus
+sciaenidae,refractory detritus
+seatrout,lutjanidae
+seatrout,large reef fish
+seatrout,small reef fish
+seatrout,seatrout
+seatrout,sciaenidae
+seatrout,mullets
+seatrout,other demersal fish
+seatrout,small demersal fish
+seatrout,jacks
+seatrout,pinfish
+seatrout,small pelagic fish
+seatrout,brown shrimp
+seatrout,pink shrimp
+seatrout,other shrimp
+seatrout,crabs and lobsters
+seatrout,crustose coralline algae
+seatrout,carnivorous macrobenthos
+seatrout,infaunal meiobenthos
+seatrout,bivalves
+seatrout,sessile filter feeders
+seatrout,sea grass
+seatrout,macroalgae
+seatrout,small phytoplankton
+seatrout,protists
+seatrout,squid
+seatrout,large zooplankton
+seatrout,small zooplankton
+seatrout,carrion detritus
+seatrout,labile detritus
+seatrout,refractory detritus
+shallow serranidae,shallow serranidae
+shallow serranidae,deep serranidae
+shallow serranidae,lutjanidae
+shallow serranidae,bioeroding fish
+shallow serranidae,large reef fish
+shallow serranidae,small reef fish
+shallow serranidae,seatrout
+shallow serranidae,sciaenidae
+shallow serranidae,flatfish
+shallow serranidae,other demersal fish
+shallow serranidae,small demersal fish
+shallow serranidae,jacks
+shallow serranidae,pinfish
+shallow serranidae,small pelagic fish
+shallow serranidae,brown shrimp
+shallow serranidae,pink shrimp
+shallow serranidae,other shrimp
+shallow serranidae,blue crab
+shallow serranidae,stone crab
+shallow serranidae,crabs and lobsters
+shallow serranidae,stony corals
+shallow serranidae,crustose coralline algae
+shallow serranidae,sponges
+shallow serranidae,carnivorous macrobenthos
+shallow serranidae,infaunal meiobenthos
+shallow serranidae,herbivorous echinoderms
+shallow serranidae,bivalves
+shallow serranidae,sessile filter feeders
+shallow serranidae,sea grass
+shallow serranidae,macroalgae
+shallow serranidae,large phytoplankton
+shallow serranidae,small phytoplankton
+shallow serranidae,toxic dinoflagellates
+shallow serranidae,protists
+shallow serranidae,jellyfish
+shallow serranidae,squid
+shallow serranidae,large zooplankton
+shallow serranidae,small zooplankton
+shallow serranidae,carrion detritus
+shallow serranidae,labile detritus
+shallow serranidae,refractory detritus
+skates and rays,large reef fish
+skates and rays,small reef fish
+skates and rays,flatfish
+skates and rays,other demersal fish
+skates and rays,small demersal fish
+skates and rays,deep water fish
+skates and rays,small pelagic fish
+skates and rays,benthic feeding sharks
+skates and rays,large sharks
+skates and rays,small sharks
+skates and rays,pink shrimp
+skates and rays,other shrimp
+skates and rays,crabs and lobsters
+skates and rays,crustose coralline algae
+skates and rays,carnivorous macrobenthos
+skates and rays,herbivorous echinoderms
+skates and rays,bivalves
+skates and rays,sessile filter feeders
+skates and rays,macroalgae
+skates and rays,small phytoplankton
+skates and rays,protists
+skates and rays,jellyfish
+skates and rays,squid
+skates and rays,large zooplankton
+skates and rays,small zooplankton
+skates and rays,carrion detritus
+skates and rays,labile detritus
+skates and rays,refractory detritus
+small demersal fish,large reef fish
+small demersal fish,small reef fish
+small demersal fish,mullets
+small demersal fish,other demersal fish
+small demersal fish,small demersal fish
+small demersal fish,large pelagic fish
+small demersal fish,medium pelagic fish
+small demersal fish,small pelagic fish
+small demersal fish,brown shrimp
+small demersal fish,pink shrimp
+small demersal fish,other shrimp
+small demersal fish,crabs and lobsters
+small demersal fish,stony corals
+small demersal fish,sponges
+small demersal fish,carnivorous macrobenthos
+small demersal fish,herbivorous echinoderms
+small demersal fish,bivalves
+small demersal fish,sessile filter feeders
+small demersal fish,sea grass
+small demersal fish,macroalgae
+small demersal fish,large phytoplankton
+small demersal fish,small phytoplankton
+small demersal fish,protists
+small demersal fish,jellyfish
+small demersal fish,squid
+small demersal fish,large zooplankton
+small demersal fish,small zooplankton
+small demersal fish,carrion detritus
+small demersal fish,labile detritus
+small demersal fish,refractory detritus
+small pelagic fish,other demersal fish
+small pelagic fish,small demersal fish
+small pelagic fish,deep water fish
+small pelagic fish,pinfish
+small pelagic fish,small pelagic fish
+small pelagic fish,brown shrimp
+small pelagic fish,other shrimp
+small pelagic fish,crabs and lobsters
+small pelagic fish,sponges
+small pelagic fish,carnivorous macrobenthos
+small pelagic fish,infaunal meiobenthos
+small pelagic fish,herbivorous echinoderms
+small pelagic fish,bivalves
+small pelagic fish,sessile filter feeders
+small pelagic fish,sea grass
+small pelagic fish,macroalgae
+small pelagic fish,large phytoplankton
+small pelagic fish,small phytoplankton
+small pelagic fish,toxic dinoflagellates
+small pelagic fish,protists
+small pelagic fish,jellyfish
+small pelagic fish,squid
+small pelagic fish,large zooplankton
+small pelagic fish,carrion detritus
+small pelagic fish,labile detritus
+small reef fish,shallow serranidae
+small reef fish,bioeroding fish
+small reef fish,small reef fish
+small reef fish,sciaenidae
+small reef fish,mullets
+small reef fish,other demersal fish
+small reef fish,small demersal fish
+small reef fish,jacks
+small reef fish,menhaden
+small reef fish,pinfish
+small reef fish,small pelagic fish
+small reef fish,brown shrimp
+small reef fish,pink shrimp
+small reef fish,other shrimp
+small reef fish,blue crab
+small reef fish,crabs and lobsters
+small reef fish,stony corals
+small reef fish,crustose coralline algae
+small reef fish,sponges
+small reef fish,carnivorous macrobenthos
+small reef fish,infaunal meiobenthos
+small reef fish,herbivorous echinoderms
+small reef fish,bivalves
+small reef fish,sessile filter feeders
+small reef fish,sea grass
+small reef fish,macroalgae
+small reef fish,large phytoplankton
+small reef fish,small phytoplankton
+small reef fish,protists
+small reef fish,jellyfish
+small reef fish,squid
+small reef fish,large zooplankton
+small reef fish,small zooplankton
+small reef fish,carrion detritus
+small reef fish,refractory detritus
+small sharks,shallow serranidae
+small sharks,deep serranidae
+small sharks,lutjanidae
+small sharks,large reef fish
+small sharks,small reef fish
+small sharks,other demersal fish
+small sharks,pinfish
+small sharks,medium pelagic fish
+small sharks,small pelagic fish
+small sharks,large sharks
+small sharks,brown shrimp
+small sharks,other shrimp
+small sharks,dolphins and porpoises
+small sharks,carnivorous macrobenthos
+small sharks,infaunal meiobenthos
+small sharks,bivalves
+small sharks,sessile filter feeders
+small sharks,macroalgae
+small sharks,squid
+snook,deep serranidae
+snook,lutjanidae
+snook,bioeroding fish
+snook,large reef fish
+snook,small reef fish
+snook,seatrout
+snook,sciaenidae
+snook,mullets
+snook,flatfish
+snook,other demersal fish
+snook,small demersal fish
+snook,jacks
+snook,menhaden
+snook,pinfish
+snook,small pelagic fish
+snook,brown shrimp
+snook,pink shrimp
+snook,other shrimp
+snook,blue crab
+snook,stone crab
+snook,crabs and lobsters
+snook,crustose coralline algae
+snook,carnivorous macrobenthos
+snook,infaunal meiobenthos
+snook,herbivorous echinoderms
+snook,bivalves
+snook,sessile filter feeders
+snook,sea grass
+snook,macroalgae
+snook,small phytoplankton
+snook,large zooplankton
+snook,small zooplankton
+snook,carrion detritus
+snook,labile detritus
+snook,refractory detritus
+spanish mackerel,large pelagic fish
+spanish mackerel,deep water fish
+spanish mackerel,pinfish
+spanish mackerel,pink shrimp
+spanish mackerel,other shrimp
+spanish mackerel,carnivorous macrobenthos
+spanish mackerel,infaunal meiobenthos
+spanish mackerel,bivalves
+spanish mackerel,sessile filter feeders
+spanish mackerel,small phytoplankton
+spanish mackerel,squid
+spanish mackerel,small zooplankton
+spanish mackerel,refractory detritus
+spanish sardine,other demersal fish
+spanish sardine,other shrimp
+spanish sardine,crabs and lobsters
+spanish sardine,carnivorous macrobenthos
+spanish sardine,infaunal meiobenthos
+spanish sardine,bivalves
+spanish sardine,small phytoplankton
+spanish sardine,toxic dinoflagellates
+spanish sardine,carrion detritus
+swordfish,small pelagic fish
+swordfish,carnivorous macrobenthos
+swordfish,bivalves
+vermilion snapper,shallow serranidae
+vermilion snapper,large reef fish
+vermilion snapper,small reef fish
+vermilion snapper,other demersal fish
+vermilion snapper,small demersal fish
+vermilion snapper,other tuna
+vermilion snapper,jacks
+vermilion snapper,small pelagic fish
+vermilion snapper,blue crab
+vermilion snapper,crabs and lobsters
+vermilion snapper,stony corals
+vermilion snapper,sponges
+vermilion snapper,carnivorous macrobenthos
+vermilion snapper,infaunal meiobenthos
+vermilion snapper,bivalves
+vermilion snapper,sessile filter feeders
+vermilion snapper,macroalgae
+vermilion snapper,small phytoplankton
+vermilion snapper,jellyfish
+vermilion snapper,squid
+vermilion snapper,large zooplankton
+vermilion snapper,small zooplankton
+vermilion snapper,carrion detritus
+yellowfin tuna,large reef fish
+yellowfin tuna,small reef fish
+yellowfin tuna,other demersal fish
+yellowfin tuna,small demersal fish
+yellowfin tuna,little tunny
+yellowfin tuna,other tuna
+yellowfin tuna,jacks
+yellowfin tuna,small pelagic fish
+yellowfin tuna,surface feeding birds
+yellowfin tuna,crabs and lobsters
+yellowfin tuna,infaunal meiobenthos
+yellowfin tuna,herbivorous echinoderms
+yellowfin tuna,sessile filter feeders
+yellowfin tuna,sea grass
+yellowfin tuna,macroalgae
+yellowfin tuna,small phytoplankton
+yellowfin tuna,jellyfish
+yellowfin tuna,large zooplankton
+yellowfin tuna,small zooplankton
+yellowfin tuna,labile detritus
