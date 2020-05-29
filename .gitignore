@@ -25,6 +25,8 @@ git_commands.txt
 
 #beta data is too large
 beta_data.csv
+no_oil_tot_catch.csv
+prey_mortality.csv
 
 # produced vignettes
 vignettes/*.html
