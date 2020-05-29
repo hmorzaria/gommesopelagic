@@ -6,57 +6,22 @@ output: html_notebook
 Code to produce figures and analysis 
 
 
-```{r Source functions, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r Source functions, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
 # set locale to avoid multibyte errors
 Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 # https://www.r-bloggers.com/web-scraping-and-invalid-multibyte-string/
 
-#' LIBRARIES
-#' -----------------
-# List of packages for session
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-
-#BiocManager::install("affyio")
-
-# sudo apt-get install libmpfr-dev
-# sudo apt-get install libgmp-dev
-#install.packages("hydromad", repos="http://hydromad.catchment.org")
-
-
-.packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
-              "rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
-              "colorRamps","colorspace","RNetCDF","polynom","hydromad","parallel",
-              "doSNOW","gmp","car","Rmpfr", "rAzureBatch", "doAzureParallel","doSNOW")
-
-# Install CRAN packages (if not already installed)
-.inst <- .packages %in% installed.packages()
-if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst], dependencies = TRUE)
-
-# Load packages into session 
-lapply(.packages, require, character.only=TRUE)
-
-# if these packages are not present uncomment and run this code
-# then uncomment before running chunk  
-# remotes::install_github("ropensci/rfishbase")
-#  install.packages('spDataLarge',
-#repos='https://nowosad.github.io/drat/', type='source')
-#  devtools::install_github("ropenscilabs/rnaturalearth")
-#  devtools::install_github("ropenscilabs/rnaturalearthdata")
-#  install.packages("rnaturalearthhires",
-#                 repos = "http://packages.ropensci.org",
-#                 type = "source")
-
-
-lapply(.packages, require, character.only=TRUE)
 
 setwd("~/gommesopelagic")
+
+source("libraries.R")
 
 source("map_polygons.R")
 source("fishbase_data.R")
 source("foodweb_diagram.R")
 source("gom_diet_matrix.R")
+
 
 
 ```
@@ -103,6 +68,8 @@ write_csv(common.habitat, "habitat_fish_categories.csv")
 
 ```
 
+#foodweb diagram
+
 ```{r foodweb diagram, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
 foodweb_map<- diet_plot(preynames="prey_names.csv", groupnames="Group_Names.csv", availabilitymatrix = "availabilities_matrix.csv", filename="gom_foodweb.png")
 
@@ -118,6 +85,389 @@ Sourcing this file will extract mortality and growth scalars from the forcing fi
 source("modify_forcing.R")
 
 ```
+
+
+Create pprey matrices using dummy availability values to test effects of contribution of mesopelagics on the food web
+
+```{r dummy_availability, echo=FALSE}
+
+workpath <- "~/gommesopelagic"
+
+setwd(workpath)
+
+guild.names <- read_csv("fg_guild_names.csv")
+
+predator.guilds <- guild.names %>% 
+  dplyr::rename(predator=fg_atlantis, predator_guild = guild) %>% 
+  dplyr::select(predator, predator_guild)
+
+prey.guilds <- guild.names %>% 
+  mutate(`prey name` = tolower(long_name)) %>% 
+  dplyr::rename(prey_guild = guild) %>% 
+  dplyr::select(`prey name`, prey_guild)
+  
+prey.data.stat <-get_pprey(preynames = "prey_names.csv", functionalgroups="Group_Names.csv", availabilities = "availabilities_matrix.csv")
+
+prey.guild <- prey.data.stat %>% 
+  left_join(predator.guilds, by="predator") %>% 
+  left_join(prey.guilds, by = "prey name") %>% 
+  dplyr::select(-mean_av,-min_av,-max_av)
+
+base.prey.guild.meso <- prey.guild %>% 
+  filter((prey_guild=="Mesopelagic" & predator_guild=="Pelagic") & availability!=0)
+
+base.prey.guild <- prey.guild %>%
+  anti_join(base.prey.guild.meso, by=c("index","name","predator","predator name","predator type","prey type","prey name","predator_guild","prey_guild"))
+  
+#create logaritmic series
+
+mult.seq <- lseq(0.00001,0.85,32)
+
+savepath <- "~/gom_runs/runs_ppreyvalues"
+headerfile  <- "GOM_PRM_2015_header.prm"
+footerfile  <- "GOM_PRM_2015_footer.prm"
+prey.frame.names  <- "prey_frame_names.csv"
+
+mult.list <- 1:length(mult.seq)
+
+
+lapply(mult.list,make_stanavail,base.prey.guild,base.prey.guild.meso,mult.seq,workpath,savepath,headerfile, footerfile, prey.frame.names)
+
+sh.files <- 32
+
+for(eachfile in 1:sh.files){
+
+  file.rename(from=paste0("~/gom_runs/runs_ppreyvalues/goc_run_",eachfile,".sh"),to=paste0("~/gom_runs/runs_ppreyvalues/run_gom_oilmeso_dist_mpprey",eachfile,"/goc_run_",eachfile,".sh"))
+  
+  file.rename(from=paste0("~/gom_runs/runs_ppreyvalues/GOM_PRM_2015_",eachfile,".prm"),to=paste0("~/gom_runs/runs_ppreyvalues/run_gom_oilmeso_dist_mpprey",eachfile,"/GOM_PRM_2015_",eachfile,".prm"))
+ 
+}    
+
+lapply(mult.list,make_stanavail,base.prey.guild,base.prey.guild.meso,mult.seq,workpath,savepath,headerfile, footerfile, prey.frame.names)
+
+
+for(eachfile in 1:sh.files){
+
+  file.rename(from=paste0("~/gom_runs/runs_ppreyvalues/goc_run_",eachfile,".sh"),to=paste0("~/gom_runs/runs_ppreyvalues/run_gom_nooil_dist_mpprey",eachfile,"/goc_run_",eachfile,".sh"))
+  
+  file.rename(from=paste0("~/gom_runs/runs_ppreyvalues/GOM_PRM_2015_",eachfile,".prm"),to=paste0("~/gom_runs/runs_ppreyvalues/run_gom_nooil_dist_mpprey",eachfile,"/GOM_PRM_2015_",eachfile,".prm"))
+} 
+
+
+```
+
+
+
+Run dummy availability values locally
+```{r}
+#used to remove extra forcing files
+#list.files(pattern = "AtlantisSpatialForcing_1000Factor_363Thresh.nc",full.names = TRUE, recursive = TRUE) %>% grep("run_gom_oilmeso_dist_mpprey",., value=TRUE) %>% file.remove()
+
+setwd("~/gom_runs/runs_ppreyvalues")
+
+folder.paths <- c(paste0("run_gom_oilmeso_dist_mpprey",1:32),paste0("run_gom_nooil_dist_mpprey",1:32))
+                  
+folder.length <- 1:length(folder.paths)
+
+system("sudo chmod -R a+rwx ~/gom_runs", wait = TRUE)
+
+#run multiple Atlantis simulations on local machine cores
+
+NumberOfCluster <- detectCores() # - 1
+
+# Initiate cluster
+cl <- snow::makeCluster(NumberOfCluster)
+registerDoSNOW(cl)
+
+# Run this for loop for one call of model from each cluster, assuming cluster is already initiated. 
+atlantis.scenarios <- foreach(this.index=folder.length, .verbose = TRUE) %dopar% {
+  
+  # List of packages for session
+  .packages = c("stringi","data.table","tidyverse","stringr","R.utils")
+  
+  # Install CRAN packages (if not already installed)
+  .inst <- .packages %in% installed.packages()
+  if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst])
+  
+  # Load packages into session 
+  lapply(.packages, require, character.only=TRUE)
+  
+  this.folder <- folder.paths[this.index]
+  this.run <- this.folder %>% 
+    str_split(.,"pprey") %>% 
+    unlist %>% 
+    .[2]
+  
+  setwd(paste0("~/gom_runs/runs_ppreyvalues/", this.folder))
+  
+  sh.file <- paste0("goc_run_",this.run,".sh")
+  
+  # run Atlantis scenario
+  system(paste("sudo flip -uv *; sudo chmod +x ", sh.file,"; sudo sh ./", sh.file, sep=""), wait = TRUE)
+  
+  done <- as.data.frame("done")
+}
+
+stopCluster(cl)
+
+system("az vm deallocate --name atlantisserver07 --no-wait --resource-group morzariacedogroup")
+
+
+```
+
+Analyze results from dummy availability values
+```{r}
+
+guild.names <- read_csv("fg_guild_names.csv") %>% 
+  dplyr::rename(Code=fg_atlantis)
+
+mult.seq <- lseq(0.00001,0.85,32)
+
+biom.list <- list.files(path="~/gom_runs/runs_ppreyvalues",pattern="GOM_OUTBiomIndx.txt", recursive = TRUE, full.names = TRUE)
+
+max.time <- 5474.5
+
+baseline.data <- fread("~/gom_runs/gommodeloilmeso_revvertdist/output/GOM_OUTBiomIndx.txt",select= c(1:87)) %>% 
+  pivot_longer(-Time, names_to = "species",values_to="biomass") %>% 
+  filter(Time==max.time)
+
+prey.meso.list <- grep("run_gom_oilmeso_dist_mpprey", biom.list, value=TRUE)
+
+file.nums <- 1:length(prey.meso.list)
+
+meso.data <- lapply(file.nums,get_biomass,prey.meso.list, max.time, this.scenario="meso_oil") %>% 
+  bind_rows()
+
+#Analyze no oil runs and pprey values
+
+prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", biom.list, value=TRUE)
+
+file.nums <- 1:length(prey.nooil.list)
+
+nooil.data <- lapply(file.nums,get_biomass,prey.nooil.list, max.time, this.scenario="no_oil") %>% 
+  bind_rows() %>% 
+  dplyr::rename(biomass_base = biomass)
+
+ratio.data <- meso.data %>% 
+  left_join(nooil.data, by=c("Time","species","preyvalue")) %>% 
+  filter(Time==max.time) %>% 
+  mutate(ratio = biomass/biomass_base) %>% 
+  dplyr::rename(Code=species) %>% 
+  left_join(guild.names, by="Code")
+
+ratio.data %>% 
+  filter(guild=="Mesopelagic") %>% 
+  ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + geom_point()
+
+#smoothing from
+#https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
+  
+
+
+ratio.plot.meso <- ratio.data %>% 
+  filter(guild=="Pelagic") %>% 
+  filter(long_name %in% c("Large pelagic fish",
+                            "Yellowfin tuna",
+                            "Bluefin tuna",
+                            "Other tuna",
+                            "White marlin",
+                            "Jacks",
+                            "Large sharks")) %>% 
+  ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + 
+  geom_point(colour = "black")+
+#  facet_wrap(long_name ~., scales="free_y")+
+  facet_wrap(long_name ~.)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  ylab("Biomass ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
+ #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
+ 
+
+ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=14, height = 10, units="cm")
+
+ratio.plot.all <- ratio.data %>% 
+  filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
+                       "Plankton", "Primary producers","Infauna",
+                       "Filter feeders","Epibenthos")) %>% 
+   ggplot(aes(x=preyvalue, y=ratio, color = `guild`)) + 
+  geom_point(colour = "black")+
+  facet_wrap(long_name ~., scales="free_y")+
+  theme_classic()+
+  theme(legend.position = "none")+
+  #theme(axis.text.y = element_text(angle = 90))+
+  ylab("Biomass ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")
+
+ggsave("pprey_ratio_plot.png", ratio.plot.all, device="png",width=20, height = 10, dpi=300)
+
+
+```
+
+Analyze realized diets
+
+```{r}
+
+setwd("~/gom_runs/runs_ppreyvalues")
+
+guild.names <- read_csv("fg_guild_names.csv") %>% 
+  dplyr::rename(predator=fg_atlantis)
+
+pel.groups <- c("Large pelagic fish",
+                            "Yellowfin tuna",
+                            "Bluefin tuna",
+                            "Other tuna",
+                            "White marlin",
+                            "Jacks",
+                            "Large sharks")
+
+folder.paths <- list.dirs(full.names = TRUE, recursive = TRUE) %>% 
+  grep(pattern="run_gom_*.*",., value = TRUE) %>% 
+  grep(pattern="output_*.*",.,value = TRUE)
+          
+mult.seq <- lseq(0.00001,0.85,32)
+
+col.names <-c("Time","prey","startN","mL","mQ","implicitMortality","GAG","RGR","SCM","SSR","DSR","RSN","VSN","LUT","BIO","LRF","SRF","BDR","RDR","SEA","SCI","LDY","MUL","POM","SHP","SNK","FLT","ODF","SDF","YTN","BTN","LTN","OTN","SWD","WMR","BMR","BIL","AMB","JCK","KMK","SMK","SAR","LPL","DWF","MEN","PIN","MPL","SPL","TIP","BEN","LGS","FIL","SMS","RAY","BSH","WSH","PSH","OSH","DBR","SBR","MAN","MYS","DOL","DDO","LOG","KMP","TUR","BCR","SCR","LOB","COR","CCA","OCT","SPG","CMB","INF","ECH","OYS","BIV","SES","EPI","GRS","ALG","MPB","LPP","SPP","DIN","PRO","JEL","SQU","LZP","SZP","PB","BB","DC","DL","DR","TotalPredMort")
+
+base.prey <- get_mort(this.scenario = "~/gom_runs/gommodeloilmeso_revvertdist/output",mult.seq, col.names) %>% 
+  dplyr::rename(base_end_mort=end_mortality, base_sum_end = sum_end_mort, base_prop_end = prop_end) %>% 
+  dplyr::select(predator, prey, base_end_mort, base_sum_end, base_prop_end)
+
+setwd("~/gom_runs/runs_ppreyvalues")
+
+pprey.mort <- lapply(folder.paths, get_mort,mult.seq, col.names) %>% 
+  bind_rows()
+
+
+heatmap.prey <- pprey.mort %>% 
+  left_join(base.prey, by = c("predator","prey")) %>% 
+  left_join(guild.names, by=c("predator"))
+  
+
+write_csv(heatmap.prey,"~/gommesopelagic/prey_mortality.csv")
+
+  
+```
+
+
+Plot prey mortality
+```{r}
+
+setwd("~/gommesopelagic")
+
+guild.names <- read_csv("fg_guild_names.csv") %>% 
+  dplyr::rename(prey=fg_atlantis, prey_name=long_name, prey_guild = guild)
+
+heatmap.prey <- read_csv("prey_mortality.csv")
+
+pel.groups <- c("Large pelagic fish",
+                            "Yellowfin tuna",
+                            "Bluefin tuna",
+                            "Other tuna",
+                            "White marlin",
+                            "Jacks",
+                            "Large sharks")
+
+heatmap.data <- heatmap.prey %>% 
+  filter(long_name %in% pel.groups) %>% 
+  group_by(run, predator, availability) %>%
+  mutate(cum_prop_end = cumsum(prop_end)) %>% 
+  filter(prop_end != 0) %>% 
+  filter(cum_prop_end > 0.30) %>% 
+  ungroup %>% 
+  left_join(guild.names, by="prey") %>% 
+  mutate(prop_change = ((prop_end * 100) / base_prop_end)-100) %>% 
+  filter(prey_guild %in% c("Demersal","Mesopelagic","Pelagic","Reef fish"))
+
+
+mycols2 <- c("magenta3", #demersal
+             "seagreen4", #mesopelagic
+             "skyblue3", #pelagic
+             "violetred4") # reef fish
+
+myshapes <-c(15,17,19,8) 
+
+ggplot(heatmap.data, aes(x=availability, y=prop_end, color=prey_guild, shape = prey_guild)) + 
+  geom_point() +
+  scale_color_manual(values=mycols2, name="Prey guild") +
+  scale_shape_manual(values=myshapes, name="Prey guild")+
+  facet_wrap(long_name ~.)+
+  theme_classic() +
+  ylab("Prey mortality proportion") + 
+  xlab("Prey availability value")
+
+
+ggplot(heatmap.data, aes(fill=prey_guild, y=prop_change, x=availability)) + 
+   geom_bar(stat="identity")+
+   theme_classic() +
+   facet_wrap(long_name ~.)
+
+# cl <- colors(distinct = TRUE)
+# set.seed(345215) # to set random generator seed
+# mycols2 <- sample(cl, length(unique(heatmap.data$prey_guild)))
+
+# mycols2 <- c("tan4", #bacteria
+#              "magenta3", #demersal
+#              "orange", #epibenthos
+#              "deepskyblue1", #filterfeeders
+#              "dodgerblue4", #mesopelagic
+#              "skyblue3", #pelagic
+#              "darkseagreen", # plankton
+#              "seagreen4", #primary producers
+#              "cyan3", # reef fish
+#              "violetred4", # sea turtles
+#              "darkorchid2", # seabirds
+#              "darkgoldenrod3") # squid
+
+
+
+# ggplot(heatmap.data, aes(x=base_prop_end, xend=prop_end, y=availability, group=prey_guild)) + 
+#   geom_dumbbell(point.colour.r="#a3c4dc", 
+#                 size=0.75, 
+#                 point.colour.l="#0e668b") + 
+#   facet_wrap(long_name ~.)
+# scale_x_continuous(label=prop_end)
+# 
+# ggplot(heatmap.data, aes(x=availability, y=prop_end, group=prey, color = prey_guild)) + 
+#   geom_boxplot() +
+#   scale_color_manual(values=mycols2) +
+#   #  scale_color_brewer(palette = "Dark2")+
+#   facet_wrap(long_name ~.)
+# 
+# ggplot(heatmap.data, aes(area = prop_end_per, fill = prey_guild, label = prey_guild)) +
+#   geom_treemap() +
+#   geom_treemap_text(fontface = "italic", colour = "white", place = "centre",
+#                     grow = TRUE)+
+#   facet_wrap(long_name ~.)
+# 
+# ggplot(heatmap.data, aes(prop_end, colour = long_name)) + stat_ecdf()+
+#   facet_wrap(availability ~.)
+# 
+# # Plot again
+# ggplot(heatmap.data, aes(x=availability, y=prop_end_per, fill=prey_guild)) + 
+#   geom_area()+
+#   scale_color_brewer(palette = "Dark2")+
+#   facet_wrap(long_name ~.)
+# 
+# ggplot(heatmap.data, aes(fill=prey_guild, y=prop_end, x=availability)) + 
+#   geom_bar(position="stack", stat="identity")+
+#   theme_classic() +
+#   facet_wrap(long_name ~.)
+# 
+# # filter(prop_end!=0) %>%   
+# heatmap.data %>% 
+#   ggplot(aes(predator,prey, fill = prop_end)) + 
+#   geom_tile(aes(fill = prop_end)) + 
+#   scale_fill_gradient(low = "lightblue", high = "firebrick4")+
+#   theme_classic() +
+#   facet_wrap(availability ~.)
+
+
+```
+
+
 
 Draw valueCreate availability matrices based on Dirichelet distribution
 ```{r}
@@ -138,11 +488,8 @@ make_availabilities(prey.data.stat, permutations = 1000, betapath, workpath, sav
 permutations <- 1000
 perm.vector <- 1:permutations
 
-NumberOfCluster <- detectCores() - 1
-cl <- parallel::makeCluster(NumberOfCluster)
-registerDoSNOW(cl)
 
-mclapply(perm.vector, make_prm, headerfile= "GOM_PRM_2015_header.prm", footerfile = "GOM_PRM_2015_footer.prm", beta.data= "beta_data.csv", beta.name.frame="beta_name_frame.csv", ad.adult.prey.data = "ad_adult_prey_data.csv", juv.prey.data= "juv_prey_data.csv", prey.frame.names = "prey_frame_names.csv", mc.cores = NumberOfCluster)
+lapply(perm.vector, make_prm, headerfile= "GOM_PRM_2015_header.prm", footerfile = "GOM_PRM_2015_footer.prm", beta.data= "beta_data.csv", beta.name.frame="beta_name_frame.csv", ad.adult.prey.data = "ad_adult_prey_data.csv", juv.prey.data= "juv_prey_data.csv", prey.frame.names = "prey_frame_names.csv")
 
 ```
 

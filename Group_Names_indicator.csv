@@ -1,0 +1,92 @@
+fg_atlantis,Group Description,Name,Diag Name,Long Name,VirgBToCurrentB,GroupID,indicator
+GAG,Gag grouper,GAG,GAG,Gag grouper,1,1,reef
+RGR,Red grouper,RGR,RGR,Red grouper,1,2,reef
+SCM,Scamp,SCM,SCM,Scamp,1,3,piscivore
+SSR,Shallow serranidae,SSR,SSR,Shallow serranidae,1,4,reef
+DSR,Deep serranidae,DSR,DSR,Deep serranidae,1,5,reef
+RSN,Red snapper,RSN,RSN,Red snapper,1,6,reef
+VSN,Vermilion snapper,VSN,VSN,Vermilion snapper,1,7,reef
+LUT,Lutjanidae,LUT,LUT,Lutjanidae,1,8,reef
+BIO,Bioeroding fish,BIO,BIO,Bioeroding fish,1,9
+LRF,Large reef fish,LRF,LRF,Large reef fish,1,10
+SRF,Small reef fish,SRF,SRF,Small reef fish,1,11
+BDR,Black drum,BDR,BDR,Black drum,1,12
+RDR,Red drum,RDR,RDR,Red drum,1,13
+SEA,Seatrout,SEA,SEA,Seatrout,1,14
+SCI,Sciaenidae,SCI,SCI,Sciaenidae,1,15
+LDY,Ladyfish,LDY,LDY,Ladyfish,1,16
+MUL,Mullets,MUL,MUL,Mullets,1,17
+POM,Pompano,POM,POM,Pompano,1,18
+SHP,Sheepshead,SHP,SHP,Sheepshead,1,19
+SNK,Snook,SNK,SNK,Snook,1,20
+FLT,Flatfish,FLT,FLT,Flatfish,1,21
+ODF,Other demersal fish,ODF,ODF,Other demersal fish,1,22
+SDF,Small demersal fish,SDF,SDF,Small demersal fish,1,23
+YTN,Yellowfin tuna,YTN,YTN,Yellowfin tuna,1,24
+BTN,Bluefin tuna,BTN,BTN,Bluefin tuna,1,25
+LTN,Little tunny,LTN,LTN,Little tunny,1,26
+OTN,Other tuna,OTN,OTN,Other tuna,1,27
+SWD,Swordfish,SWD,SWD,Swordfish,1,28
+WMR,White marlin,WMR,WMR,White marlin,1,29
+BMR,Blue marlin,BMR,BMR,Blue marlin,1,30
+BIL,Other billfish,BIL,BIL,Other billfish,1,31
+AMB,Greater amberjack,AMB,AMB,Greater amberjack,1,32
+JCK,Jacks,JCK,JCK,Jacks,1,33
+KMK,King mackerel,KMK,KMK,King mackerel,1,34
+SMK,Spanish mackerel,SMK,SMK,Spanish mackerel,1,35
+SAR,Spanish sardine,SAR,SAR,Spanish sardine,1,36
+LPL,Large pelagic fish,LPL,LPL,Large pelagic fish,1,37
+DWF,Deep water fish,DWF,DWF,Deep water fish,1,38
+MEN,Menhaden,MEN,MEN,Menhaden,1,39
+PIN,Pinfish,PIN,PIN,Pinfish,1,40
+MPL,Medium pelagic fish,MPL,MPL,Medium pelagic fish,1,41
+SPL,Small pelagic fish,SPL,SPL,Small pelagic fish,1,42
+TIP,Blacktip shark,TIP,TIP,Blacktip shark,1,43
+BEN,Benthic feeding sharks,BEN,BEN,Benthic feeding sharks,1,44
+LGS,Large sharks,LGS,LGS,Large sharks,1,45
+FIL,Filter feeding sharks,FIL,FIL,Filter feeding sharks,1,46
+SMS,Small sharks,SMS,SMS,Small sharks,1,47
+RAY,Skates and rays,RAY,RAY,Skates and rays,1,48
+BSH,Brown shrimp,BSH,BSH,Brown shrimp,1,49
+WSH,White shrimp,WSH,WSH,White shrimp,1,50
+PSH,Pink shrimp,PSH,PSH,Pink shrimp,1,51
+OSH,Other shrimp,OSH,OSH,Other shrimp,1,52
+DBR,Diving birds,DBR,DBR,Diving birds,1,53
+SBR,Surface feeding birds,SBR,SBR,Surface feeding birds,1,54
+MAN,Manatee,MAN,MAN,Manatee,1,55
+MYS,Mysticeti,MYS,MYS,Mysticeti,1,56
+DOL,Dolphins and porpoises,DOL,DOL,Dolphins and porpoises,1,57
+DDO,Deep diving odontocetae,DDO,DDO,Deep diving odontocetae,1,58
+LOG,Loggerhead,LOG,LOG,Loggerhead,1,59
+KMP,Kemps ridley,KMP,KMP,Kemps ridley,1,60
+TUR,Other turtles,TUR,TUR,Other turtles,1,61
+BCR,Blue crab,BCR,BCR,Blue crab,1,62
+SCR,Stone crab,SCR,SCR,Stone crab,1,63
+LOB,Crabs and lobsters,LOB,LOB,Crabs and lobsters,1,64
+COR,Stony corals,COR,COR,Stony corals,1,65
+CCA,Crustose coralline algae,CCA,CCA,Crustose coralline algae,1,66
+OCT,Octocorals,OCT,OCT,Octocorals,1,67
+SPG,Sponges,SPG,SPG,Sponges,1,68
+CMB,Carnivorous macrobenthos,CMB,CMB,Carnivorous macrobenthos,1,69
+INF,Infaunal meiobenthos,INF,INF,Infaunal meiobenthos,1,70
+ECH,Herbivorous echinoderms,ECH,ECH,Herbivorous echinoderms,1,71
+OYS,Oysters,OYS,OYS,Oysters,1,72
+BIV,Bivalves,BIV,BIV,Bivalves,1,73
+SES,Sessile filter feeders,SES,SES,Sessile filter feeders,1,74
+EPI,Epiphytes,EPI,EPI,Epiphytes,1,75
+GRS,Sea grass,GRS,GRS,Sea grass,1,76
+ALG,Macroalgae,ALG,ALG,Macroalgae,1,77
+MPB,Microphytobenthos,MPB,MPB,Microphytobenthos,1,78
+LPP,Large phytoplankton,LPP,LPP,Large phytoplankton,1,79
+SPP,Small phytoplankton,SPP,SPP,Small phytoplankton,1,80
+DIN,Toxic dinoflagellates,DIN,DIN,Toxic dinoflagellates,1,81
+PRO,Protists,PRO,PRO,Protists,1,82
+JEL,Jellyfish,JEL,JEL,Jellyfish,1,83
+SQU,Squid,SQU,SQU,Squid,1,84
+LZP,Large zooplankton,LZP,LZP,Large zooplankton,1,85
+SZP,Small zooplankton,SZP,SZP,Small zooplankton,1,86
+PB,Bacteria,PB,PB,Bacteria,1,87
+BB,Sediment bacteria,BB,BB,Sediment bacteria,1,88
+DC,Carrion detritus,DC,DC,Carrion detritus,1,89
+DL,Labile detritus,DL,DL,Labile detritus,1,90
+DR,Refractory detritus,DR,DR,Refractory detritus,1,91

@@ -1,0 +1,92 @@
+fg_atlantis,Index,IsTurnedOn,Name,Long Name,NumCohorts,VerticallyMigrates,HorizontallyMigrates,isFished,IsImpacted,isTAC,InvertType,isPredator,IsCover,isSiliconDep,isAssessed,IsCatchGrazer,isOverWinter
+GAG,0,1,GAG,Gag grouper,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+RGR,1,1,RGR,Red grouper,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SCM,2,1,SCM,Scamp,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SSR,3,1,SSR,Shallow serranidae,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+DSR,4,1,DSR,Deep serranidae,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+RSN,5,1,RSN,Red snapper,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+VSN,6,1,VSN,Vermilion snapper,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+LUT,7,1,LUT,Lutjanidae,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+BIO,8,1,BIO,Bioeroding fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+LRF,9,1,LRF,Large reef fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SRF,10,1,SRF,Small reef fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+BDR,11,1,BDR,Black drum,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+RDR,12,1,RDR,Red drum,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SEA,13,1,SEA,Seatrout,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SCI,14,1,SCI,Sciaenidae,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+LDY,15,1,LDY,Ladyfish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+MUL,16,1,MUL,Mullets,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+POM,17,1,POM,Pompano,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SHP,18,1,SHP,Sheepshead,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SNK,19,1,SNK,Snook,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+FLT,20,1,FLT,Flatfish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+ODF,21,1,ODF,Other demersal fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SDF,22,1,SDF,Small demersal fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+YTN,23,1,YTN,Yellowfin tuna,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+BTN,24,1,BTN,Bluefin tuna,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+LTN,25,1,LTN,Little tunny,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+OTN,26,1,OTN,Other tuna,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SWD,27,1,SWD,Swordfish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+WMR,28,1,WMR,White marlin,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+BMR,29,1,BMR,Blue marlin,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+BIL,30,1,BIL,Other billfish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+AMB,31,1,AMB,Greater amberjack,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+JCK,32,1,JCK,Jacks,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+KMK,33,1,KMK,King mackerel,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SMK,34,1,SMK,Spanish mackerel,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SAR,35,1,SAR,Spanish sardine,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+LPL,36,1,LPL,Large pelagic fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+DWF,37,1,DWF,Deep water fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+MEN,38,1,MEN,Menhaden,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+PIN,39,1,PIN,Pinfish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+MPL,40,1,MPL,Medium pelagic fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+SPL,41,1,SPL,Small pelagic fish,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+TIP,42,1,TIP,Blacktip shark,10,1,1,1,1,1,SHARK,1,0,0,0,0,0
+BEN,43,1,BEN,Benthic feeding sharks,10,1,1,1,1,1,SHARK,1,0,0,0,0,0
+LGS,44,1,LGS,Large sharks,10,1,1,1,1,1,SHARK,1,0,0,0,0,0
+FIL,45,1,FIL,Filter feeding sharks,10,1,1,1,1,1,SHARK,1,0,0,0,0,0
+SMS,46,1,SMS,Small sharks,10,1,1,1,1,1,SHARK,1,0,0,0,0,0
+RAY,47,1,RAY,Skates and rays,10,1,1,1,1,1,SHARK,1,0,0,0,0,0
+BSH,48,1,BSH,Brown shrimp,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+WSH,49,1,WSH,White shrimp,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+PSH,50,1,PSH,Pink shrimp,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+OSH,51,1,OSH,Other shrimp,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+DBR,52,1,DBR,Diving birds,10,1,1,1,1,1,BIRD,1,0,0,0,0,0
+SBR,53,1,SBR,Surface feeding birds,10,1,1,1,1,1,BIRD,1,0,0,0,0,0
+MAN,54,1,MAN,Manatee,10,1,1,1,1,1,MAMMAL,1,0,0,0,0,0
+MYS,55,1,MYS,Mysticeti,10,1,1,1,1,1,MAMMAL,1,0,0,0,0,0
+DOL,56,1,DOL,Dolphins and porpoises,10,1,1,1,1,1,MAMMAL,1,0,0,0,1,0
+DDO,57,1,DDO,Deep diving odontocetae,10,1,1,1,1,1,MAMMAL,1,0,0,0,0,0
+LOG,58,1,LOG,Loggerhead,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+KMP,59,1,KMP,Kemps ridley,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+TUR,60,1,TUR,Other turtles,10,1,1,1,1,1,FISH,1,0,0,0,0,0
+BCR,61,1,BCR,Blue crab,1,0,0,1,1,1,MOB_EP_OTHER,1,0,0,0,0,0
+SCR,62,1,SCR,Stone crab,1,0,0,1,1,1,MOB_EP_OTHER,1,0,0,0,0,0
+LOB,63,1,LOB,Crabs and lobsters,1,0,0,1,1,1,MOB_EP_OTHER,1,0,0,0,0,0
+COR,64,1,COR,Stony corals,1,0,0,0,0,0,PHYTOBEN,0,1,0,0,0,0
+CCA,65,1,CCA,Crustose coralline algae,1,0,0,0,0,0,PHYTOBEN,0,0,0,0,0,0
+OCT,66,1,OCT,Octocorals,1,0,0,0,0,0,PHYTOBEN,0,0,0,0,0,0
+SPG,67,1,SPG,Sponges,1,0,0,0,0,0,SED_EP_FF,1,0,0,0,0,0
+CMB,68,1,CMB,Carnivorous macrobenthos,1,0,0,1,1,1,MOB_EP_OTHER,1,0,0,0,0,0
+INF,69,1,INF,Infaunal meiobenthos,1,0,0,0,0,0,LG_INF,1,0,0,0,0,0
+ECH,70,1,ECH,Herbivorous echinoderms,1,0,0,0,0,0,MOB_EP_OTHER,1,0,0,0,0,0
+OYS,71,1,OYS,Oysters,1,0,0,1,1,1,SED_EP_FF,1,1,0,0,0,0
+BIV,72,1,BIV,Bivalves,1,0,0,1,1,1,SED_EP_FF,1,1,0,0,0,0
+SES,73,1,SES,Sessile filter feeders,1,0,0,1,1,1,SED_EP_FF,1,0,0,0,0,0
+EPI,74,1,EPI,Epiphytes,1,0,0,0,0,0,PHYTOBEN,0,0,0,0,0,0
+GRS,75,1,GRS,Sea grass,1,0,0,0,0,0,SEAGRASS,0,1,0,0,0,0
+ALG,76,1,ALG,Macroalgae,1,0,0,0,0,0,PHYTOBEN,0,1,0,0,0,0
+MPB,77,1,MPB,Microphytobenthos,1,0,0,0,0,0,MICROPHTYBENTHOS,0,0,1,0,0,0
+LPP,78,1,LPP,Large phytoplankton,1,1,0,0,0,0,LG_PHY,0,0,1,0,0,0
+SPP,79,1,SPP,Small phytoplankton,1,1,0,0,0,0,SM_PHY,0,0,0,0,0,0
+DIN,80,1,DIN,Toxic dinoflagellates,1,1,0,0,0,0,DINOFLAG,1,0,0,0,0,0
+PRO,81,1,PRO,Protists,1,0,0,0,0,0,SM_ZOO,1,0,0,0,0,0
+JEL,82,1,JEL,Jellyfish,1,1,0,0,0,0,LG_ZOO,1,0,0,0,0,0
+SQU,83,1,SQU,Squid,1,1,0,1,1,1,LG_ZOO,1,0,0,0,0,0
+LZP,84,1,LZP,Large zooplankton,1,1,0,0,0,0,LG_ZOO,1,0,0,0,0,0
+SZP,85,1,SZP,Small zooplankton,1,1,0,0,0,0,LG_ZOO,1,0,0,0,0,0
+PB,86,1,PB,Bacteria,1,0,0,0,0,0,PL_BACT,0,0,0,0,0,0
+BB,87,1,BB,Sediment bacteria,1,0,0,0,0,0,SED_BACT,0,0,0,0,0,0
+DC,88,1,DC,Carrion detritus,1,0,0,0,0,0,CARRION,0,0,0,0,0,0
+DL,89,1,DL,Labile detritus,1,0,0,0,0,0,LAB_DET,0,0,0,0,0,0
+DR,90,1,DR,Refractory detritus,1,0,0,0,0,0,REF_DET,0,0,0,0,0,0
