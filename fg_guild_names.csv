@@ -1,92 +1,92 @@
-long_name,fg_atlantis,guild
-Gag grouper,GAG,Reef fish
-Red grouper,RGR,Reef fish
-Scamp,SCM,Reef fish
-Shallow serranidae,SSR,Reef fish
-Deep serranidae,DSR,Demersal
-Red snapper,RSN,Reef fish
-Vermilion snapper,VSN,Demersal
-Lutjanidae,LUT,Reef fish
-Bioeroding fish,BIO,Reef fish
-Large reef fish,LRF,Reef fish
-Small reef fish,SRF,Reef fish
-Black drum,BDR,Demersal
-Red drum,RDR,Demersal
-Seatrout,SEA,Demersal
-Sciaenidae,SCI,Demersal
-Ladyfish,LDY,Reef fish
-Mullets,MUL,Pelagic
-Pompano,POM,Demersal
-Sheepshead,SHP,Reef fish
-Snook,SNK,Reef fish
-Flatfish,FLT,Demersal
-Other demersal fish,ODF,Mesopelagic
-Small demersal fish,SDF,Mesopelagic
-Yellowfin tuna,YTN,Pelagic
-Bluefin tuna,BTN,Pelagic
-Little tunny,LTN,Pelagic
-Other tuna,OTN,Pelagic
-Swordfish,SWD,Pelagic
-White marlin,WMR,Pelagic
-Blue marlin,BMR,Pelagic
-Other billfish,BIL,Pelagic
-Greater amberjack,AMB,Pelagic
-Jacks,JCK,Pelagic
-King mackerel,KMK,Reef fish
-Spanish mackerel,SMK,Pelagic
-Spanish sardine,SAR,Pelagic
-Large pelagic fish,LPL,Pelagic
-Deep water fish,DWF,Mesopelagic
-Menhaden,MEN,Pelagic
-Pinfish,PIN,Demersal
-Medium pelagic fish,MPL,Pelagic
-Small pelagic fish,SPL,Pelagic
-Blacktip shark,TIP,Reef fish
-Benthic feeding sharks,BEN,Demersal
-Large sharks,LGS,Pelagic
-Filter feeding sharks,FIL,Pelagic
-Small sharks,SMS,Pelagic
-Skates and rays,RAY,Demersal
-Brown shrimp,BSH,Epibenthos
-White shrimp,WSH,Epibenthos
-Pink shrimp,PSH,Epibenthos
-Other shrimp,OSH,Epibenthos
-Diving birds,DBR,Seabirds
-Surface feeding birds,SBR,Seabirds
-Manatee,MAN,Marine mammals
-Mysticeti,MYS,Marine mammals
-Dolphins and porpoises,DOL,Marine mammals
-Deep diving odontocetae,DDO,Marine mammals
-Loggerhead,LOG,Sea turtles
-Kemps ridley,KMP,Sea turtles
-Other turtles,TUR,Sea turtles
-Blue crab,BCR,Epibenthos
-Stone crab,SCR,Epibenthos
-Crabs and lobsters,LOB,Epibenthos
-Stony corals,COR,Epibenthos
-Crustose coralline algae,CCA,Primary producers
-Octocorals,OCT,Epibenthos
-Sponges,SPG,Epibenthos
-Carnivorous macrobenthos,CMB,Epibenthos
-Infaunal meiobenthos,INF,Infauna
-Herbivorous echinoderms,ECH,Epibenthos
-Oysters,OYS,Filter feeders
-Bivalves,BIV,Filter feeders
-Sessile filter feeders,SES,Filter feeders
-Epiphytes,EPI,Primary producers
-Sea grass,GRS,Primary producers
-Macroalgae,ALG,Primary producers
-Microphytobenthos,MPB,Primary producers
-Large phytoplankton,LPP,Primary producers
-Small phytoplankton,SPP,Primary producers
-Toxic dinoflagellates,DIN,Plankton
-Protists,PRO,Plankton
-Jellyfish,JEL,Plankton
-Squid,SQU,Squid
-Large zooplankton,LZP,Plankton
-Small zooplankton,SZP,Plankton
-Bacteria,PB,Bacteria
-Sediment bacteria,BB,Bacteria
-Carrion detritus,DC,Detritus
-Labile detritus,DL,Detritus
-Refractory detritus,DR,Detritus
+long_name,group,guild,habit
+Bacteria,PB,Bacteria,Bacteria
+Benthic feeding sharks,BEN,Demersal,Demersal
+Bioeroding fish,BIO,Reef fish,Pelagic
+Bivalves,BIV,Filter feeders,Filter feeders
+Black drum,BDR,Demersal,Demersal
+Blacktip shark,TIP,Reef fish,Pelagic
+Blue crab,BCR,Epibenthos,Epibenthos
+Blue marlin,BMR,Pelagic,Pelagic
+Bluefin tuna,BTN,Pelagic,Pelagic
+Brown shrimp,BSH,Epibenthos,Epibenthos
+Carnivorous macrobenthos,CMB,Epibenthos,Epibenthos
+Carrion detritus,DC,Detritus,Detritus
+Crabs and lobsters,LOB,Epibenthos,Epibenthos
+Crustose coralline algae,CCA,Primary producers,Primary producers
+Deep diving odontocetae,DDO,Marine mammals,Marine mammals
+Deep serranidae,DSR,Demersal,Demersal
+Deep water fish,DWF,Mesopelagic,Pelagic
+Diving birds,DBR,Seabirds,Seabirds
+Dolphins and porpoises,DOL,Marine mammals,Marine mammals
+Epiphytes,EPI,Primary producers,Primary producers
+Filter feeding sharks,FIL,Pelagic,Pelagic
+Flatfish,FLT,Demersal,Demersal
+Gag grouper,GAG,Reef fish,Pelagic
+Greater amberjack,AMB,Pelagic,Pelagic
+Herbivorous echinoderms,ECH,Epibenthos,Epibenthos
+Infaunal meiobenthos,INF,Infauna,Infauna
+Jacks,JCK,Pelagic,Pelagic
+Jellyfish,JEL,Plankton,Plankton
+Kemps ridley,KMP,Sea turtles,Sea turtles
+King mackerel,KMK,Reef fish,Pelagic
+Labile detritus,DL,Detritus,Detritus
+Ladyfish,LDY,Reef fish,Pelagic
+Large pelagic fish,LPL,Pelagic,Pelagic
+Large phytoplankton,LPP,Primary producers,Primary producers
+Large reef fish,LRF,Reef fish,Pelagic
+Large sharks,LGS,Pelagic,Pelagic
+Large zooplankton,LZP,Plankton,Plankton
+Little tunny,LTN,Pelagic,Pelagic
+Loggerhead,LOG,Sea turtles,Sea turtles
+Lutjanidae,LUT,Reef fish,Pelagic
+Macroalgae,ALG,Primary producers,Primary producers
+Manatee,MAN,Marine mammals,Marine mammals
+Medium pelagic fish,MPL,Pelagic,Pelagic
+Menhaden,MEN,Pelagic,Pelagic
+Microphytobenthos,MPB,Primary producers,Primary producers
+Mullets,MUL,Pelagic,Demersal
+Mysticeti,MYS,Marine mammals,Marine mammals
+Octocorals,OCT,Epibenthos,Epibenthos
+Other billfish,BIL,Pelagic,Pelagic
+Other demersal fish,ODF,Mesopelagic,Demersal
+Other shrimp,OSH,Epibenthos,Epibenthos
+Other tuna,OTN,Pelagic,Pelagic
+Other turtles,TUR,Sea turtles,Sea turtles
+Oysters,OYS,Filter feeders,Filter feeders
+Pinfish,PIN,Demersal,Demersal
+Pink shrimp,PSH,Epibenthos,Epibenthos
+Pompano,POM,Demersal,Demersal
+Protists,PRO,Plankton,Plankton
+Red drum,RDR,Demersal,Demersal
+Red grouper,RGR,Reef fish,Pelagic
+Red snapper,RSN,Reef fish,Pelagic
+Refractory detritus,DR,Detritus,Detritus
+Scamp,SCM,Reef fish,Pelagic
+Sciaenidae,SCI,Demersal,Demersal
+Sea grass,GRS,Primary producers,Primary producers
+Seatrout,SEA,Demersal,Demersal
+Sediment bacteria,BB,Bacteria,Bacteria
+Sessile filter feeders,SES,Filter feeders,Filter feeders
+Shallow serranidae,SSR,Reef fish,Pelagic
+Sheepshead,SHP,Reef fish,Pelagic
+Skates and rays,RAY,Demersal,Demersal
+Small demersal fish,SDF,Mesopelagic,Demersal
+Small pelagic fish,SPL,Pelagic,Pelagic
+Small phytoplankton,SPP,Primary producers,Primary producers
+Small reef fish,SRF,Reef fish,Pelagic
+Small sharks,SMS,Demersal,Demersal
+Small zooplankton,SZP,Plankton,Plankton
+Snook,SNK,Reef fish,Demersal
+Spanish mackerel,SMK,Pelagic,Pelagic
+Spanish sardine,SAR,Reef fish,Pelagic
+Sponges,SPG,Epibenthos,Epibenthos
+Squid,SQU,Squid,Squid
+Stone crab,SCR,Epibenthos,Epibenthos
+Stony corals,COR,Epibenthos,Epibenthos
+Surface feeding birds,SBR,Seabirds,Seabirds
+Swordfish,SWD,Pelagic,Pelagic
+Toxic dinoflagellates,DIN,Plankton,Plankton
+Vermilion snapper,VSN,Demersal,Demersal
+White marlin,WMR,Pelagic,Pelagic
+White shrimp,WSH,Epibenthos,Epibenthos
+Yellowfin tuna,YTN,Pelagic,Pelagic

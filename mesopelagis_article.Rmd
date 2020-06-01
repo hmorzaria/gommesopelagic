@@ -41,6 +41,8 @@ Retrieve habitat for species in each functional group to classify in guilds
 
 ```{r get_habitatdata, message=FALSE, warning=FALSE}
 
+guild.names <- read_csv("fg_guild_names.csv")
+
 atlantis.groups <- read_xlsx("Species_lists.xlsx", sheet = "group_names")
 
 group.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") %>% 
@@ -62,6 +64,10 @@ common.habitat <- fish.habitat %>%
   dplyr::select(-DemersPelag)
   
 head(common.habitat)
+
+common.habitat %>% 
+  rename(long_name = group) %>% 
+  right_join(guild.names, by="long_name") 
 
 write_csv(common.habitat, "habitat_fish_categories.csv")
 
@@ -221,7 +227,7 @@ Analyze results from dummy availability values
 ```{r}
 
 guild.names <- read_csv("fg_guild_names.csv") %>% 
-  dplyr::rename(Code=fg_atlantis)
+  dplyr::rename(Code=group)
 
 mult.seq <- lseq(0.00001,0.85,32)
 
@@ -257,15 +263,11 @@ ratio.data <- meso.data %>%
   dplyr::rename(Code=species) %>% 
   left_join(guild.names, by="Code")
 
-ratio.data %>% 
-  filter(guild=="Mesopelagic") %>% 
-  ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + geom_point()
+write_csv(ratio.data,"biomass_results.csv")
 
 #smoothing from
 #https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
   
-
-
 ratio.plot.meso <- ratio.data %>% 
   filter(guild=="Pelagic") %>% 
   filter(long_name %in% c("Large pelagic fish",
@@ -276,7 +278,7 @@ ratio.plot.meso <- ratio.data %>%
                             "Jacks",
                             "Large sharks")) %>% 
   ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + 
-  geom_point(colour = "black")+
+  geom_point()+
 #  facet_wrap(long_name ~., scales="free_y")+
   facet_wrap(long_name ~.)+
   theme_classic()+
@@ -287,7 +289,7 @@ ratio.plot.meso <- ratio.data %>%
  #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
  
 
-ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=14, height = 10, units="cm")
+ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=13, height = 11, units="cm")
 
 ratio.plot.all <- ratio.data %>% 
   filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
@@ -360,7 +362,7 @@ Plot prey mortality
 setwd("~/gommesopelagic")
 
 guild.names <- read_csv("fg_guild_names.csv") %>% 
-  dplyr::rename(prey=fg_atlantis, prey_name=long_name, prey_guild = guild)
+  dplyr::rename(prey=group, prey_name=long_name, prey_guild = guild)
 
 heatmap.prey <- read_csv("prey_mortality.csv")
 
@@ -380,8 +382,10 @@ heatmap.data <- heatmap.prey %>%
   filter(cum_prop_end > 0.30) %>% 
   ungroup %>% 
   left_join(guild.names, by="prey") %>% 
-  mutate(prop_change = ((prop_end * 100) / base_prop_end)-100) %>% 
-  filter(prey_guild %in% c("Demersal","Mesopelagic","Pelagic","Reef fish"))
+  mutate(prop_change = (((prop_end - base_prop_end)/base_prop_end) * 100)) %>% 
+  filter(prey_guild %in% c("Demersal","Mesopelagic","Pelagic","Reef fish")) %>% 
+  mutate(prop_change = if_else(is.infinite(prop_change),100,prop_change)) %>% 
+  mutate(num_availability = dense_rank(availability))
 
 
 mycols2 <- c("magenta3", #demersal
@@ -391,20 +395,25 @@ mycols2 <- c("magenta3", #demersal
 
 myshapes <-c(15,17,19,8) 
 
-ggplot(heatmap.data, aes(x=availability, y=prop_end, color=prey_guild, shape = prey_guild)) + 
+prey.mortality <- ggplot(heatmap.data, aes(x=availability, y=prop_end, color=prey_guild, shape = prey_guild)) +
   geom_point() +
   scale_color_manual(values=mycols2, name="Prey guild") +
   scale_shape_manual(values=myshapes, name="Prey guild")+
   facet_wrap(long_name ~.)+
   theme_classic() +
-  ylab("Prey mortality proportion") + 
-  xlab("Prey availability value")
+  ylab("Prey mortality contribution") + 
+  xlab("Prey availability")+
+  theme(legend.position="bottom")
+
+ggsave("pprey_mortality_plot.png", prey.mortality, device="png",width=14, height = 12, units="cm")
 
 
-ggplot(heatmap.data, aes(fill=prey_guild, y=prop_change, x=availability)) + 
-   geom_bar(stat="identity")+
-   theme_classic() +
-   facet_wrap(long_name ~.)
+# ggplot(heatmap.data, aes(fill=prey_name, y=prop_change, x=long_name, group=num_availability)) + 
+#    geom_bar(stat="identity", position = "dodge")+
+#    theme_classic() +
+#   coord_flip()+
+#   facet_wrap(num_availability ~.)
+   
 
 # cl <- colors(distinct = TRUE)
 # set.seed(345215) # to set random generator seed
@@ -468,4 +477,310 @@ ggplot(heatmap.data, aes(fill=prey_guild, y=prop_change, x=availability)) +
 
 
 ```
+
+Obtain catch and plot
+
+```{r}
+guild.names <- read_csv("fg_guild_names.csv") %>% 
+  dplyr::rename(Code=group)
+
+mult.seq <- lseq(0.00001,0.85,32)
+
+catch.list <- list.files(path="~/gom_runs/runs_ppreyvalues",pattern="GOM_OUTCatch.txt", recursive = TRUE, full.names = TRUE)
+
+max.time <- 5474.5
+
+baseline.data <- fread("~/gom_runs/gommodeloilmeso_revvertdist/output/GOM_OUTCatch.txt",select= c(1:70)) %>% 
+  pivot_longer(-Time, names_to = "species",values_to="catch") %>% 
+  filter(Time==max.time)
+
+prey.meso.list <- grep("run_gom_oilmeso_dist_mpprey", catch.list, value=TRUE)
+
+file.nums <- 1:length(prey.meso.list)
+
+meso.data <- lapply(file.nums,get_catch,prey.meso.list, max.time, this.scenario="meso_oil") %>% 
+  bind_rows()
+
+#Analyze no oil runs and pprey values
+
+prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", biom.list, value=TRUE)
+
+file.nums <- 1:length(prey.nooil.list)
+
+nooil.data <- lapply(file.nums,get_catch,prey.nooil.list, max.time, this.scenario="no_oil") %>% 
+  bind_rows() %>% 
+  dplyr::rename(catch_base = catch)
+
+ratio.data <- meso.data %>% 
+  left_join(nooil.data, by=c("Time","species","preyvalue")) %>% 
+  filter(Time==max.time) %>% 
+  mutate(ratio = catch/catch_base) %>% 
+  dplyr::rename(Code=species) %>% 
+  left_join(guild.names, by="Code")
+
+write_csv(ratio.data,"catch_results.csv")
+
+#smoothing from
+#https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
+  
+ratio.plot.meso <- ratio.data %>% 
+  filter(guild=="Pelagic") %>% 
+  filter(long_name %in% c("Large pelagic fish",
+                            "Yellowfin tuna",
+                            "Bluefin tuna",
+                            "Other tuna",
+                            "White marlin",
+                            "Jacks",
+                            "Large sharks")) %>% 
+  ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + 
+  geom_point()+
+#  facet_wrap(long_name ~., scales="free_y")+
+  facet_grid(long_name ~ ., scales = "free_y")+
+  theme_classic()+
+  theme(legend.position = "none")+
+  ylab("Catch ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
+ #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
+ 
+
+ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=13, height = 11, units="cm")
+
+ratio.plot.all <- ratio.data %>% 
+  filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
+                       "Plankton", "Primary producers","Infauna",
+                       "Filter feeders","Epibenthos")) %>% 
+   ggplot(aes(x=preyvalue, y=ratio, color = `guild`)) + 
+  geom_point(colour = "black")+
+  facet_wrap(long_name ~., scales="free_y")+
+  theme_classic()+
+  theme(legend.position = "none")+
+  #theme(axis.text.y = element_text(angle = 90))+
+  ylab("Biomass ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")
+
+ggsave("pprey_ratio_plot.png", ratio.plot.all, device="png",width=20, height = 10, dpi=300)
+
+
+```
+
+
+Plot ecosystem indices
+
+Reef fish catch, Pelagic to demersal ratio, and Piscivore to planktivore ratio, and indicators robust to error, Red snapper biomass, Shrimp biomass, Forage fish biomass, and Elasmobranch biomass.
+
+```{r}
+
+#read biomass results
+
+setwd("~/gommesopelagic")
+
+ratio.data <- read_csv("biomass_results.csv")
+
+species.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") 
+
+availability.data <- read_csv("prey_data_stat.csv")
+
+atlantis.groups <- read_csv("Group_Names.csv")
+
+guild.names <- read_csv("fg_guild_names.csv")
+
+species.list <- species.composition %>% 
+  pull(scientific_name)
+
+fish.groups <- species.composition %>% 
+  distinct(group) %>% 
+  rename(long_name=group) %>% 
+  left_join(guild.names, by = "long_name") %>% 
+  pull(group)
+
+plankton.groups <- c("LPP","SPP","DIN","PRO","JEL","SQU","LZP","SZP")
+
+#run to get ecology data from Fishbase                    
+#fish.ecology <- lapply(species.list, get_ecology) %>% 
+#  bind_rows
+
+#write_csv(fish.ecology, "fishbase_ecology.csv")
+
+fish.ecology <- read_csv("fishbase_ecology.csv")
+  
+heatmap.prey <- read_csv("prey_mortality.csv")
+
+fish.mort <- heatmap.prey %>% 
+  filter(predator %in% fish.groups)
+
+sum.fish.mort <- fish.mort %>% 
+  group_by(predator) %>% 
+  summarise(base_fin_mort=sum(base_end_mort))
+
+fish.prey.mort <- atlantis.groups %>% 
+  rename(`prey name`=`Long Name`, `prey` = Code) %>% 
+  mutate(`prey name` = tolower(`prey name`)) %>% 
+  right_join(fish.availability, by="prey") %>% 
+  mutate(prey_category=if_else(prey %in% fish.groups,"fish prey",
+                               if_else(prey %in% plankton.groups, "plankton prey","other prey")))
+
+piscivore.code <- fish.prey.mort %>% 
+    filter(prey_category=="fish prey") %>% 
+    group_by(`predator`,prey_category) %>% 
+    summarise(fish_prey_sum = sum(base_end_mort)) %>% 
+    left_join(sum.fish.mort, by = c("predator")) %>% 
+    ungroup %>% 
+    mutate(fish_prey_ratio = fish_prey_sum / base_fin_mort) %>% 
+    filter(fish_prey_ratio > 0.45) %>% 
+    distinct(predator) %>% 
+    pull(predator)
+
+piscivore.groups <- atlantis.groups %>% 
+  filter(Code %in% piscivore.code) %>% 
+  transmute(long_name=tolower(`Long Name`)) %>% 
+  pull(long_name)
+
+planktivore.code <- fish.prey.mort %>% 
+    filter(prey_category=="plankton prey") %>% 
+    group_by(`predator`,prey_category) %>% 
+    summarise(fish_prey_sum = sum(base_end_mort)) %>% 
+    left_join(sum.fish.mort, by = c("predator")) %>% 
+    ungroup %>% 
+    mutate(fish_prey_ratio = fish_prey_sum / base_fin_mort) %>% 
+    filter(fish_prey_ratio > 0.25) %>% 
+    distinct(predator) %>% 
+    pull(predator)
+
+planktivore.groups <- atlantis.groups %>% 
+  filter(Code %in% planktivore.code) %>% 
+  transmute(long_name=tolower(`Long Name`)) %>% 
+  pull(long_name)
+
+pelagic.groups <- guild.names %>% 
+  filter(habit=="Pelagic") %>% 
+  transmute(long_name=tolower(long_name)) %>% 
+  pull(long_name)
+
+demersal.groups <- guild.names %>% 
+  filter(habit=="Demersal") %>% 
+  transmute(long_name=tolower(long_name)) %>% 
+  pull(long_name)
+  
+reef.groups <- guild.names %>% 
+  filter(guild=="Reef fish") %>% 
+  transmute(long_name=tolower(long_name)) %>% 
+  pull(long_name)
+
+shrimp.groups <- c("White shrimp","Brown shrimp","Other shrimp","Pink shrimp") %>% 
+  tolower()
+
+forage.groups <- c("Small pelagic fish", "Medium pelagic fish") %>% 
+  tolower()
+
+elasmobranch.groups <- c("Filter feeding sharks","Large sharks","Small sharks","Benthic feeding sharks",
+                         "Blacktip shark","Skates and rays") %>% 
+  tolower()
+
+avail.values <- ratio.data %>% 
+  distinct(preyvalue) %>% 
+  pull(preyvalue)
+
+lapply(avail.values, get_indicators, ratio.data,reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups)
+
+get_indicators <- function(this.avvalue, ratio.data,reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups){
+  
+  #Reef fish catch
+
+this.biom.data <- ratio.data %>% 
+  filter(preyvalue==this.avvalue)
+
+reef.catch <- ratio.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% reef.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(indicator="Reef fish catch")
+
+#pelagic to demersal ratio
+
+pel.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% pelagic.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(habit = "pelagic") %>% 
+  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_pel")
+
+dem.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% demersal.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(habit = "demersal") %>% 
+  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_dem")
+
+pel.dem.ratio <- dem.biom %>% 
+  left_join(pel.biom, by="scenario") %>% 
+  mutate(value=biomass_pel / biomass_dem) %>% 
+  dplyr::select(value,scenario) %>% 
+  pivot_wider(names_from=scenario,values_from = value) %>% 
+  mutate(indicator = "Pelagic to demersal ratio")
+  
+#piscivore to planktivore ratio
+plank.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% planktivore.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(habit = "planktivore") %>% 
+  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_pla")
+
+pisci.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% piscivore.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(habit = "piscivore") %>% 
+  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_pis")
+
+pisc.plan.ratio <- plank.biom %>% 
+  left_join(pisci.biom, by="scenario") %>% 
+  mutate(value=biomass_pis / biomass_pla) %>% 
+  dplyr::select(value,scenario) %>% 
+  pivot_wider(names_from=scenario,values_from = value) %>% 
+  mutate(indicator = "Piscivore to planktonic ratio")
+
+#Red snapper biomass
+
+redsnapper.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name == "red snapper") %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(indicator = "Red snapper biomass")
+
+#Shrimp biomass
+
+shrimp.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% shrimp.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(indicator = "Shrimp biomass")
+
+#Forage fish biomass
+
+forage.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% forage.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(indicator = "Forage fish biomass")
+
+#Elasmobranch biomass
+
+elasmo.biom <- this.biom.data %>% 
+  mutate(long_name=tolower(long_name)) %>% 
+  filter(long_name %in% elasmobranch.groups) %>% 
+  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
+  mutate(indicator = "Elasmobranch biomass")
+
+indicator.data <- bind_rows(elasmo.biom, forage.biom,shrimp.biom,redsnapper.biom,pisc.plan.ratio, pel.dem.ratio, reef.catch) %>% 
+  mutate(availability = this.avvalue)
+
+return(indindicator.data)
+}
+  
+
+```
+
 

@@ -31,3 +31,18 @@ get_fishbase <- function(eachname){
   
   return(res.table)
 }
+
+get_ecology <- function(eachname){
+  
+  print(eachname)
+  
+  new.name <- validate_names(eachname)
+  
+  sp.table <- ecology(new.name)
+  
+  res.table <- sp.table %>% 
+    dplyr::select(Species,FeedingType, Herbivory2, FoodTroph) %>% 
+    mutate(old_name = eachname)
+  
+  return(res.table)
+}
