@@ -478,7 +478,7 @@ ggsave("pprey_mortality_plot.png", prey.mortality, device="png",width=14, height
 
 ```
 
-Obtain catch and plot
+Obtain catch data
 
 ```{r}
 guild.names <- read_csv("fg_guild_names.csv") %>% 
@@ -523,19 +523,27 @@ write_csv(ratio.data,"catch_results.csv")
 #smoothing from
 #https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
   
-ratio.plot.meso <- ratio.data %>% 
-  filter(guild=="Pelagic") %>% 
-  filter(long_name %in% c("Large pelagic fish",
-                            "Yellowfin tuna",
-                            "Bluefin tuna",
-                            "Other tuna",
-                            "White marlin",
-                            "Jacks",
-                            "Large sharks")) %>% 
-  ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + 
+
+```
+
+Plot catch data
+
+```{r}
+
+ratio.data <- read_csv("catch_results.csv") %>% 
+  mutate(percent_change = ratio *100) 
+
+ratio.plot.catch <- ratio.data %>% 
+    filter(!guild %in% c("Marine mammals","Detritus","Bacteria",
+                       "Plankton", "Primary producers","Infauna",
+                       "Filter feeders","Seabirds","Sea turtles","Squid")) %>% 
+  group_by(preyvalue, guild) %>% 
+  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
+  mutate(catch_ratio = tot_catch / tot_catch_base) %>% 
+  #pivot_longer(cols=c("tot_catch","tot_catch_base"),names_to = "scenario") %>% 
+   ggplot(aes(x=preyvalue, y=catch_ratio, color = guild)) + 
   geom_point()+
-#  facet_wrap(long_name ~., scales="free_y")+
-  facet_grid(long_name ~ ., scales = "free_y")+
+   facet_grid(guild ~ ., scales = "free_y")+
   theme_classic()+
   theme(legend.position = "none")+
   ylab("Catch ratio") + 
@@ -544,23 +552,7 @@ ratio.plot.meso <- ratio.data %>%
  #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
  
 
-ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=13, height = 11, units="cm")
-
-ratio.plot.all <- ratio.data %>% 
-  filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
-                       "Plankton", "Primary producers","Infauna",
-                       "Filter feeders","Epibenthos")) %>% 
-   ggplot(aes(x=preyvalue, y=ratio, color = `guild`)) + 
-  geom_point(colour = "black")+
-  facet_wrap(long_name ~., scales="free_y")+
-  theme_classic()+
-  theme(legend.position = "none")+
-  #theme(axis.text.y = element_text(angle = 90))+
-  ylab("Biomass ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")
-
-ggsave("pprey_ratio_plot.png", ratio.plot.all, device="png",width=20, height = 10, dpi=300)
+ggsave("pprey_ratio_catch_guild.png", ratio.plot.catch, device="png",width=13, height = 11, units="cm")
 
 
 ```
@@ -576,7 +568,9 @@ Reef fish catch, Pelagic to demersal ratio, and Piscivore to planktivore ratio, 
 
 setwd("~/gommesopelagic")
 
-ratio.data <- read_csv("biomass_results.csv")
+biomass.data <- read_csv("biomass_results.csv")
+
+catch.data <- read_csv("catch_results.csv") 
 
 species.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") 
 
@@ -674,112 +668,77 @@ shrimp.groups <- c("White shrimp","Brown shrimp","Other shrimp","Pink shrimp") %
 forage.groups <- c("Small pelagic fish", "Medium pelagic fish") %>% 
   tolower()
 
-elasmobranch.groups <- c("Filter feeding sharks","Large sharks","Small sharks","Benthic feeding sharks",
-                         "Blacktip shark","Skates and rays") %>% 
+elasmobranch.groups <- c("Filter feeding sharks","Large sharks","Small sharks","Benthic feeding sharks","Blacktip shark","Skates and rays") %>% 
   tolower()
 
-avail.values <- ratio.data %>% 
+avail.values <- biomass.data %>% 
   distinct(preyvalue) %>% 
   pull(preyvalue)
 
-lapply(avail.values, get_indicators, ratio.data,reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups)
+indicator.data <- lapply(avail.values, get_indicators, biomass.data,catch.data, reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups) %>% 
+  bind_rows
 
-get_indicators <- function(this.avvalue, ratio.data,reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups){
+norm.indicator.data <- indicator.data %>% 
+  group_by(availability) %>% 
+  summarise(tot_oil_value = sum(oil_value), tot_base_value = sum(base_value)) %>% 
+  left_join(indicator.data, by="availability") %>% 
+  mutate(norm_oil_value = oil_value/tot_oil_value, norm_base_value = base_value/tot_base_value) 
+
+#Radar plot
+# norm.indicator.data %>% 
+#   mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pelagic:demersal ratio", 
+#                            if_else(indicator=="Piscivore to planktonic ratio","Piscivore:planktonic ratio",indicator))) %>% 
+#   dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>% 
+#   filter(availability < 0.000011) %>% 
+#   pivot_longer(norm_oil_value:norm_base_value,names_to = "scenario") %>% 
+#   mutate(scenario = if_else(scenario=="norm_oil_value","Mesopelagic forcing","No oil")) %>% 
+#   pivot_wider(id_cols=scenario,names_from = indicator, values_from = value) %>% 
+#   ggRadar(., aes(group = scenario), 
+#           rescale = FALSE, legend.position = "none",, colour = "darkslateblue",
+#           size = 1, interactive = FALSE, use.label = TRUE) +
+#   facet_wrap(~scenario)+
+#   theme(axis.text.x = element_text(size = 8))
+
+#lollipop plot for single availability
+eco.inid.plot <- norm.indicator.data %>% 
+  mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pelagic:demersal ratio", 
+                           if_else(indicator=="Piscivore to planktonic ratio","Piscivore:planktonic ratio",indicator))) %>% 
+  dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>% 
+  filter(availability < 0.000011) %>% 
+  ggplot( aes(x=indicator, y=norm_base_value)) +
+  geom_segment(aes(x=indicator, xend=indicator, y=norm_oil_value, yend=norm_base_value), color="darkgrey") +
+  geom_point(size=5, color="darkcyan") +
+  geom_point(aes(y=norm_oil_value), size=5, color="darkorange", alpha=0.7) +
+  coord_flip() +
+  theme_classic()+
+  theme(legend.position = "none")+
+  ylab("Value") + 
+  xlab("Indicator") +
+  ylim(0,1)
+
+  ggsave("indicator_meso.png", eco.inid.plot, device="png",width=13, height = 11, units="cm")
+
   
-  #Reef fish catch
-
-this.biom.data <- ratio.data %>% 
-  filter(preyvalue==this.avvalue)
-
-reef.catch <- ratio.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% reef.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(indicator="Reef fish catch")
-
-#pelagic to demersal ratio
-
-pel.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% pelagic.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(habit = "pelagic") %>% 
-  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_pel")
-
-dem.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% demersal.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(habit = "demersal") %>% 
-  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_dem")
-
-pel.dem.ratio <- dem.biom %>% 
-  left_join(pel.biom, by="scenario") %>% 
-  mutate(value=biomass_pel / biomass_dem) %>% 
-  dplyr::select(value,scenario) %>% 
-  pivot_wider(names_from=scenario,values_from = value) %>% 
-  mutate(indicator = "Pelagic to demersal ratio")
   
-#piscivore to planktivore ratio
-plank.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% planktivore.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(habit = "planktivore") %>% 
-  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_pla")
+eco.allav.plot <- norm.indicator.data %>% 
+  mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pelagic:demersal ratio", 
+                           if_else(indicator=="Piscivore to planktonic ratio","Piscivore:planktonic ratio",indicator))) %>% 
+  dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>% 
+  ggplot( aes(x=indicator, y=norm_base_value)) +
+  geom_segment(aes(x=indicator, xend=indicator, y=norm_oil_value, yend=norm_base_value), color="darkgrey") +
+  geom_point(aes(color=availability),size=5, alpha=0.7) +
+  geom_point(aes(y=norm_oil_value, color=availability), size=5, alpha=0.7) +
+  coord_flip() +
+  theme_classic()+
+  ylab("Value") + 
+  xlab("Indicator") +
+  ylim(0,1)+
+  theme(legend.position="bottom")+
+  scale_color_continuous(name="Availability")
 
-pisci.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% piscivore.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(habit = "piscivore") %>% 
-  pivot_longer(cols=c(oil_value,base_value),names_to = "scenario",values_to="biomass_pis")
 
-pisc.plan.ratio <- plank.biom %>% 
-  left_join(pisci.biom, by="scenario") %>% 
-  mutate(value=biomass_pis / biomass_pla) %>% 
-  dplyr::select(value,scenario) %>% 
-  pivot_wider(names_from=scenario,values_from = value) %>% 
-  mutate(indicator = "Piscivore to planktonic ratio")
+  ggsave("indicator_allmeso.png", eco.allav.plot, device="png",width=13, height = 11, units="cm")
 
-#Red snapper biomass
-
-redsnapper.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name == "red snapper") %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(indicator = "Red snapper biomass")
-
-#Shrimp biomass
-
-shrimp.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% shrimp.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(indicator = "Shrimp biomass")
-
-#Forage fish biomass
-
-forage.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% forage.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(indicator = "Forage fish biomass")
-
-#Elasmobranch biomass
-
-elasmo.biom <- this.biom.data %>% 
-  mutate(long_name=tolower(long_name)) %>% 
-  filter(long_name %in% elasmobranch.groups) %>% 
-  summarise(oil_value=sum(biomass),base_value=sum(biomass_base)) %>% 
-  mutate(indicator = "Elasmobranch biomass")
-
-indicator.data <- bind_rows(elasmo.biom, forage.biom,shrimp.biom,redsnapper.biom,pisc.plan.ratio, pel.dem.ratio, reef.catch) %>% 
-  mutate(availability = this.avvalue)
-
-return(indindicator.data)
-}
-  
 
 ```
 

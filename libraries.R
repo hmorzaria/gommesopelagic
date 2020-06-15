@@ -17,7 +17,7 @@
 .packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
               "rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
               "colorRamps","colorspace","RNetCDF","parallel",
-              "doSNOW","rAzureBatch", "doAzureParallel","doSNOW","emdbook","plotly")
+              "doSNOW","emdbook","plotly","ggiraphExtra","viridis")
 
 #.packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
 #"rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
