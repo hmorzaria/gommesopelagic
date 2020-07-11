@@ -17,11 +17,16 @@ setwd("~/gommesopelagic")
 
 source("libraries.R")
 
-source("map_polygons.R")
-source("fishbase_data.R")
-source("foodweb_diagram.R")
-source("gom_diet_matrix.R")
-
+source("make_map.R")
+source("get_fishbasedata.R")
+source("get_fishbaseecology.R")
+source("diet_plot.R")
+source("get_catch_box.R")
+source("get_catch.R")
+source("get_biomass.R")
+source("get_pprey.R")
+source("get_mort.R")
+source("get_indicators.R")
 
 
 ```
@@ -31,9 +36,10 @@ Map of study area showing Atlantis polygons
 #scale factor is how much distance to add in the edges of the map, units are dependent on the coordinate system of the shapefile
 #bar position can be top or bottom (t,b) or left or right (l,r)
 
-model.map <- make_map(shape.file="GOM_LL.shp", file.name = "gom_model_map.png", scale.factor = 2, bar.position = "tl")
+west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
 
-model.map
+make_map(shape.file="GOM_LL.shp", file.name = "gom_model_map.png", scale.factor = 2, bar.position = "tl", west.fl.pol)
+
 
 ```
 
@@ -95,7 +101,7 @@ source("modify_forcing.R")
 ```
 
 
-Create pprey matrices using dummy availability values to test effects of contribution of mesopelagics on the food web
+Create pprey matrices using dummy availability values to test effects of contribution of mesopelagics on the food web. Then create biology prm and sh files to run simulations using this range of availability values. 
 
 ```{r dummy_availability, echo=FALSE}
 
@@ -223,7 +229,8 @@ system("az vm deallocate --name atlantisserver07 --no-wait --resource-group morz
 
 ```
 
-Analyze results from dummy availability values
+Analyze biomass results. Takes the last three years of the simulation and averages
+
 ```{r}
 
 guild.names <- read_csv("fg_guild_names.csv") %>% 
@@ -231,21 +238,26 @@ guild.names <- read_csv("fg_guild_names.csv") %>%
 
 mult.seq <- lseq(0.00001,0.85,32)
 
-biom.list <- list.files(path="~/gom_runs/runs_ppreyvalues",pattern="GOM_OUTBiomIndx.txt", recursive = TRUE, full.names = TRUE)
+biom.list <- list.files(path="~/gom_runs/runs_ppreyvalues",pattern="GOM_OUTBoxBiomass.txt", recursive = TRUE, full.names = TRUE)
 
-max.time <- 5474.5
+max.time <- c(4745.0,4770.0,4800.0,4830.0,4860.0,4890.0,4920.0,4950.0,4980.0,5010.0,5040.0,5070.0,5100.0,5110.0,5130.0,5160.0,5190.0,5220.0,5250.0,5280.0,5310.0,5340.0,5370.0,5400.0,5430.0,5460.0,5474.5)
 
-baseline.data <- fread("~/gom_runs/gommodeloilmeso_revvertdist/output/GOM_OUTBiomIndx.txt",select= c(1:87)) %>% 
-  pivot_longer(-Time, names_to = "species",values_to="biomass") %>% 
-  filter(Time==max.time)
+baseline.data <- fread("~/gom_runs/gommodeloilmeso_revvertdist/output/GOM_OUTBoxBiomass.txt",select= c(1:88)) %>% 
+  pivot_longer(c(-Time, -Box), names_to = "species",values_to="biomass") %>% 
+  filter(Time %in% max.time) %>% 
+  group_by(Box,species) %>% 
+  summarise(biomass = mean(biomass))
 
 prey.meso.list <- grep("run_gom_oilmeso_dist_mpprey", biom.list, value=TRUE)
 
 file.nums <- 1:length(prey.meso.list)
 
 meso.data <- lapply(file.nums,get_biomass,prey.meso.list, max.time, this.scenario="meso_oil") %>% 
-  bind_rows()
-
+  bind_rows() %>% 
+  filter(Time %in% max.time) %>% 
+  group_by(Box,species,preyvalue,scenario) %>% 
+  summarise(biomass = mean(biomass))
+ 
 #Analyze no oil runs and pprey values
 
 prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", biom.list, value=TRUE)
@@ -254,22 +266,65 @@ file.nums <- 1:length(prey.nooil.list)
 
 nooil.data <- lapply(file.nums,get_biomass,prey.nooil.list, max.time, this.scenario="no_oil") %>% 
   bind_rows() %>% 
-  dplyr::rename(biomass_base = biomass)
+  dplyr::rename(biomass_base = biomass, scenario_base = scenario) %>% 
+  filter(Time %in% max.time) %>% 
+  group_by(Box,species,preyvalue,scenario_base) %>% 
+  summarise(biomass_base = mean(biomass_base))
 
 ratio.data <- meso.data %>% 
-  left_join(nooil.data, by=c("Time","species","preyvalue")) %>% 
-  filter(Time==max.time) %>% 
-  mutate(ratio = biomass/biomass_base) %>% 
+  left_join(nooil.data, by=c("Box","species","preyvalue")) %>% 
   dplyr::rename(Code=species) %>% 
   left_join(guild.names, by="Code")
 
 write_csv(ratio.data,"biomass_results.csv")
 
+
+```
+
+Plot biomass for the whole model and just for the West Florida Shelf
+```{r}
 #smoothing from
 #https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
   
+ratio.data <- read_csv("biomass_results.csv") 
+
+
+west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
+
+
 ratio.plot.meso <- ratio.data %>% 
+  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+  mutate(ratio = biomass/biomass_base) %>% 
   filter(guild=="Pelagic") %>% 
+  filter(long_name %in% c("Large pelagic fish",
+                          "Yellowfin tuna",
+                          "Bluefin tuna",
+                          "Other tuna",
+                          "White marlin",
+                          "Jacks",
+                          "Large sharks")) %>% 
+  ggplot(aes(x=preyvalue, y=ratio, color = long_name)) + 
+  geom_point()+
+  #  facet_wrap(long_name ~., scales="free_y")+
+  facet_wrap(long_name ~.)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  ylab("Biomass ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
+#  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
+ 
+
+ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=13, height = 11, units="cm")
+
+
+ratio.plot.meso.wf <- ratio.data %>% 
+  filter(Box %in% west.fl.pol) %>% 
+  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+  mutate(ratio = biomass/biomass_base) %>% 
+  filter(guild=="Pelagic") %>%  
   filter(long_name %in% c("Large pelagic fish",
                             "Yellowfin tuna",
                             "Bluefin tuna",
@@ -289,9 +344,12 @@ ratio.plot.meso <- ratio.data %>%
  #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
  
 
-ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=13, height = 11, units="cm")
+ggsave("pprey_ratio_pelagic_plot_wf.png", ratio.plot.meso, device="png",width=13, height = 11, units="cm")
 
 ratio.plot.all <- ratio.data %>% 
+  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+  mutate(ratio = biomass/biomass_base) %>%
   filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
                        "Plankton", "Primary producers","Infauna",
                        "Filter feeders","Epibenthos")) %>% 
@@ -307,8 +365,28 @@ ratio.plot.all <- ratio.data %>%
 
 ggsave("pprey_ratio_plot.png", ratio.plot.all, device="png",width=20, height = 10, dpi=300)
 
+ratio.plot.all.wf <- ratio.data %>% 
+  filter(Box %in% west.fl.pol) %>% 
+  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+  mutate(ratio = biomass/biomass_base) %>% 
+  filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
+                       "Plankton", "Primary producers","Infauna",
+                       "Filter feeders","Epibenthos")) %>% 
+   ggplot(aes(x=preyvalue, y=ratio, color = `guild`)) + 
+  geom_point(colour = "black")+
+  facet_wrap(long_name ~., scales="free_y")+
+  theme_classic()+
+  theme(legend.position = "none")+
+  #theme(axis.text.y = element_text(angle = 90))+
+  ylab("Biomass ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")
 
+ggsave("pprey_ratio_plot_wf.png", ratio.plot.all, device="png",width=20, height = 10, dpi=300)
 ```
+
+
 
 Analyze realized diets
 
@@ -401,7 +479,7 @@ prey.mortality <- ggplot(heatmap.data, aes(x=availability, y=prop_end, color=pre
   scale_shape_manual(values=myshapes, name="Prey guild")+
   facet_wrap(long_name ~.)+
   theme_classic() +
-  ylab("Prey mortality contribution") + 
+  ylab("Predation mortality") + 
   xlab("Prey availability")+
   theme(legend.position="bottom")
 
@@ -478,60 +556,88 @@ ggsave("pprey_mortality_plot.png", prey.mortality, device="png",width=14, height
 
 ```
 
-Obtain catch data
+
+Catch per polygon
 
 ```{r}
+
 guild.names <- read_csv("fg_guild_names.csv") %>% 
   dplyr::rename(Code=group)
 
 mult.seq <- lseq(0.00001,0.85,32)
 
-catch.list <- list.files(path="~/gom_runs/runs_ppreyvalues",pattern="GOM_OUTCatch.txt", recursive = TRUE, full.names = TRUE)
+max.time <- c(4745.0,4770.0,4800.0,4830.0,4860.0,4890.0,4920.0,4950.0,4980.0,5010.0,5040.0,
+                5070.0,5100.0,5110.0,5130.0,5160.0,5190.0,5220.0,5250.0,5280.0,5310.0,5340.0,5370.0,5400.0,5430.0,5460.0,5474.5)
 
-max.time <- 5474.5
+catch.species <- read_csv("GulfGroups.csv") %>% 
+  filter(isFished==1) %>% 
+  pull(fg_atlantis)
 
-baseline.data <- fread("~/gom_runs/gommodeloilmeso_revvertdist/output/GOM_OUTCatch.txt",select= c(1:70)) %>% 
-  pivot_longer(-Time, names_to = "species",values_to="catch") %>% 
-  filter(Time==max.time)
+catch.list <- list.files(path="~/gom_runs/runs_ppreyvalues",pattern="GOM_OUTTOTCATCH.nc", recursive = TRUE, full.names = TRUE)
 
 prey.meso.list <- grep("run_gom_oilmeso_dist_mpprey", catch.list, value=TRUE)
 
 file.nums <- 1:length(prey.meso.list)
 
-meso.data <- lapply(file.nums,get_catch,prey.meso.list, max.time, this.scenario="meso_oil") %>% 
-  bind_rows()
+meso.data <- lapply(file.nums,get_catch_box,prey.meso.list, max.time, this.scenario="meso_oil", catch.species) %>% 
+  bind_rows() %>% 
+  group_by(Box,species, preyvalue,scenario) %>% 
+  summarise(catch=sum(catch))
 
 #Analyze no oil runs and pprey values
 
-prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", biom.list, value=TRUE)
+prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", catch.list, value=TRUE)
 
 file.nums <- 1:length(prey.nooil.list)
 
-nooil.data <- lapply(file.nums,get_catch,prey.nooil.list, max.time, this.scenario="no_oil") %>% 
+nooil.data <- lapply(file.nums,get_catch_box,prey.nooil.list, max.time, this.scenario="no_oil", catch.species) %>% 
   bind_rows() %>% 
-  dplyr::rename(catch_base = catch)
+  dplyr::rename(catch_base = catch, base_scenario = scenario) %>% 
+  group_by(Box,species, preyvalue,base_scenario) %>% 
+  summarise(catch_base=sum(catch_base))
 
 ratio.data <- meso.data %>% 
-  left_join(nooil.data, by=c("Time","species","preyvalue")) %>% 
-  filter(Time==max.time) %>% 
-  mutate(ratio = catch/catch_base) %>% 
+  left_join(nooil.data, by=c("Box","species","preyvalue")) %>% 
   dplyr::rename(Code=species) %>% 
-  left_join(guild.names, by="Code")
+  left_join(guild.names, by="Code") 
 
-write_csv(ratio.data,"catch_results.csv")
+write_csv(ratio.data,"catch_box_results.csv")
 
 #smoothing from
 #https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
   
-
 ```
+
 
 Plot catch data
 
 ```{r}
 
-ratio.data <- read_csv("catch_results.csv") %>% 
-  mutate(percent_change = ratio *100) 
+ratio.data <- read_csv("catch_box_results.csv") 
+
+west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
+
+ratio.plot.catch.wf <- ratio.data %>% 
+    filter(Box %in% west.fl.pol) %>% 
+    filter(!guild %in% c("Marine mammals","Detritus","Bacteria",
+                       "Plankton", "Primary producers","Infauna",
+                       "Filter feeders","Seabirds","Sea turtles","Squid")) %>% 
+  group_by(preyvalue, guild) %>% 
+  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
+  mutate(catch_ratio = tot_catch / tot_catch_base) %>% 
+  #pivot_longer(cols=c("tot_catch","tot_catch_base"),names_to = "scenario") %>% 
+   ggplot(aes(x=preyvalue, y=catch_ratio, color = guild)) + 
+  geom_point()+
+   facet_grid(guild ~ ., scales = "free_y")+
+  theme_classic()+
+  theme(legend.position = "none")+
+  ylab("Catch ratio") + 
+  xlab("Prey availability value") +
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
+ #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
+ 
+
+ggsave("pprey_ratio_catch_guild_wf.png", ratio.plot.catch.wf, device="png",width=10, height = 13, units="cm")
 
 ratio.plot.catch <- ratio.data %>% 
     filter(!guild %in% c("Marine mammals","Detritus","Bacteria",
@@ -552,7 +658,7 @@ ratio.plot.catch <- ratio.data %>%
  #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
  
 
-ggsave("pprey_ratio_catch_guild.png", ratio.plot.catch, device="png",width=13, height = 11, units="cm")
+ggsave("pprey_ratio_catch_guild.png", ratio.plot.catch, device="png",width=10, height = 13, units="cm")
 
 
 ```
@@ -568,9 +674,30 @@ Reef fish catch, Pelagic to demersal ratio, and Piscivore to planktivore ratio, 
 
 setwd("~/gommesopelagic")
 
-biomass.data <- read_csv("biomass_results.csv")
+west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
 
-catch.data <- read_csv("catch_results.csv") 
+biomass.data <- read_csv("biomass_results.csv") %>% 
+  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+  ungroup
+
+biomass.data.wf <- read_csv("biomass_results.csv") %>% 
+  filter(Box %in% west.fl.pol) %>% 
+  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+  ungroup
+
+catch.data.wf <- read_csv("catch_box_results.csv") %>% 
+  filter(Box %in% west.fl.pol) %>% 
+  group_by(Code,preyvalue,long_name,guild,habit) %>% 
+  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
+  ungroup
+
+catch.data <- read_csv("catch_box_results.csv") %>% 
+  group_by(Code,preyvalue,long_name,guild,habit) %>% 
+  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
+  ungroup
+
 
 species.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") 
 
@@ -608,12 +735,18 @@ sum.fish.mort <- fish.mort %>%
   group_by(predator) %>% 
   summarise(base_fin_mort=sum(base_end_mort))
 
+fish.availability <- availability.data %>% 
+  filter(predator %in% fish.groups) %>% 
+  group_by(predator, `prey name`) %>% 
+  summarise(tot_availability = sum(availability))
+
 fish.prey.mort <- atlantis.groups %>% 
   rename(`prey name`=`Long Name`, `prey` = Code) %>% 
   mutate(`prey name` = tolower(`prey name`)) %>% 
-  right_join(fish.availability, by="prey") %>% 
+  right_join(fish.availability, by="prey name") %>% 
   mutate(prey_category=if_else(prey %in% fish.groups,"fish prey",
-                               if_else(prey %in% plankton.groups, "plankton prey","other prey")))
+                               if_else(prey %in% plankton.groups, "plankton prey","other prey"))) %>% 
+  left_join(fish.mort, by=c("predator","prey"))
 
 piscivore.code <- fish.prey.mort %>% 
     filter(prey_category=="fish prey") %>% 
@@ -672,10 +805,14 @@ elasmobranch.groups <- c("Filter feeding sharks","Large sharks","Small sharks","
   tolower()
 
 avail.values <- biomass.data %>% 
+  ungroup %>% 
   distinct(preyvalue) %>% 
   pull(preyvalue)
 
 indicator.data <- lapply(avail.values, get_indicators, biomass.data,catch.data, reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups) %>% 
+  bind_rows
+
+indicator.data.wf <- lapply(avail.values, get_indicators, biomass.data.wf,catch.data.wf, reef.groups, pelagic.groups, demersal.groups, planktivore.groups, piscivore.groups, shrimp.groups, forage.groups, elasmobranch.groups) %>% 
   bind_rows
 
 norm.indicator.data <- indicator.data %>% 
@@ -684,60 +821,81 @@ norm.indicator.data <- indicator.data %>%
   left_join(indicator.data, by="availability") %>% 
   mutate(norm_oil_value = oil_value/tot_oil_value, norm_base_value = base_value/tot_base_value) 
 
-#Radar plot
-# norm.indicator.data %>% 
+
+norm.indicator.data.wf <- indicator.data.wf %>% 
+  group_by(availability) %>% 
+  summarise(tot_oil_value = sum(oil_value), tot_base_value = sum(base_value)) %>% 
+  left_join(indicator.data.wf, by="availability") %>% 
+  mutate(norm_oil_value = oil_value/tot_oil_value, norm_base_value = base_value/tot_base_value) 
+
+
+bar.plot.wf <- norm.indicator.data.wf %>%
+  mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pel:dem ratio",
+                           if_else(indicator=="Piscivore to planktonic ratio","Pisc:plank ratio",
+                                   if_else(indicator=="Forage fish biomass","Forage biom.",indicator)))) %>%
+  dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>%
+  mutate(availability = round(availability,6)) %>% 
+ # filter(availability < 0.000011) %>%
+  pivot_longer(norm_oil_value:norm_base_value,names_to = "scenario") %>%
+  mutate(scenario = if_else(scenario=="norm_oil_value","Mesopelagic forcing","No oil")) %>%
+  filter(scenario=="Mesopelagic forcing") %>% 
+  dplyr::select(-scenario) %>% 
+  ggplot(aes(x=indicator, y = value, fill=indicator))+
+  geom_bar(stat="identity")+
+  facet_wrap(~availability)+
+  theme_classic() +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.title.x=element_blank())+
+  ylim(0,1)+
+  guides(fill=guide_legend(title="Indicator"))
+  
+  ggsave("bar_indicator_meso_wf.png", bar.plot.wf, device="png",width=20, height = 15, units="cm")
+
+
+radar.plot.wf <- norm.indicator.data.wf %>%
+  mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pel:dem",
+                           if_else(indicator=="Piscivore to planktonic ratio","Pisc:plank",
+                                   if_else(indicator=="Forage fish biomass","Forage",
+                                           if_else(indicator=="Red snapper biomass","Snapper",
+                                                    if_else(indicator=="Reef fish catch","Reef fish",
+                                                      if_else(indicator=="Elasmobranch biomass","Elasmobranch",
+                                                            if_else(indicator=="Shrimp biomass","Shrimp",indicator)))))))) %>%
+  dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>%
+  filter(availability < 0.000011) %>%
+  pivot_longer(norm_oil_value:norm_base_value,names_to = "scenario") %>%
+  mutate(scenario = if_else(scenario=="norm_oil_value","Mesopelagic forcing","No oil")) %>%
+  pivot_wider(id_cols=scenario,names_from = indicator, values_from = value) %>%
+  ggRadar(., aes(group = scenario),
+          rescale = FALSE, 
+          legend.position = "none", colour = "darkslateblue",
+          size = 1, 
+          interactive = FALSE, 
+          use.label = TRUE)+
+          theme(axis.text.x = element_text(size = 6)) + # larger label sizes +
+  facet_grid(scenario ~ .)+
+  theme(axis.text.x = element_text(angle = 25, vjust = 0, hjust=1))+
+  ylim(0,1)
+
+  ggsave("radar_indicator_meso_wf.png", radar.plot.wf, device="png", scale = 1.4, width=6, height = 9, units="cm")
+
+
+#lollipop plot 
+# 
+# eco.allav.plot <- norm.indicator.data %>% 
 #   mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pelagic:demersal ratio", 
 #                            if_else(indicator=="Piscivore to planktonic ratio","Piscivore:planktonic ratio",indicator))) %>% 
 #   dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>% 
-#   filter(availability < 0.000011) %>% 
-#   pivot_longer(norm_oil_value:norm_base_value,names_to = "scenario") %>% 
-#   mutate(scenario = if_else(scenario=="norm_oil_value","Mesopelagic forcing","No oil")) %>% 
-#   pivot_wider(id_cols=scenario,names_from = indicator, values_from = value) %>% 
-#   ggRadar(., aes(group = scenario), 
-#           rescale = FALSE, legend.position = "none",, colour = "darkslateblue",
-#           size = 1, interactive = FALSE, use.label = TRUE) +
-#   facet_wrap(~scenario)+
-#   theme(axis.text.x = element_text(size = 8))
+#   ggplot( aes(x=indicator, y=norm_base_value)) +
+#   geom_segment(aes(x=indicator, xend=indicator, y=norm_oil_value, yend=norm_base_value), color="darkgrey") +
+#   geom_point(aes(color=availability),size=5, alpha=0.7) +
+#   geom_point(aes(y=norm_oil_value, color=availability), size=5, alpha=0.7) +
+#   coord_flip() +
+#   theme_classic()+
+#   ylab("Value") + 
+#   xlab("Indicator") +
+#   ylim(0,1)+
+#   theme(legend.position="bottom")+
+#   scale_color_continuous(name="Availability")
 
-#lollipop plot for single availability
-eco.inid.plot <- norm.indicator.data %>% 
-  mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pelagic:demersal ratio", 
-                           if_else(indicator=="Piscivore to planktonic ratio","Piscivore:planktonic ratio",indicator))) %>% 
-  dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>% 
-  filter(availability < 0.000011) %>% 
-  ggplot( aes(x=indicator, y=norm_base_value)) +
-  geom_segment(aes(x=indicator, xend=indicator, y=norm_oil_value, yend=norm_base_value), color="darkgrey") +
-  geom_point(size=5, color="darkcyan") +
-  geom_point(aes(y=norm_oil_value), size=5, color="darkorange", alpha=0.7) +
-  coord_flip() +
-  theme_classic()+
-  theme(legend.position = "none")+
-  ylab("Value") + 
-  xlab("Indicator") +
-  ylim(0,1)
-
-  ggsave("indicator_meso.png", eco.inid.plot, device="png",width=13, height = 11, units="cm")
-
-  
-  
-eco.allav.plot <- norm.indicator.data %>% 
-  mutate(indicator=if_else(indicator=="Pelagic to demersal ratio","Pelagic:demersal ratio", 
-                           if_else(indicator=="Piscivore to planktonic ratio","Piscivore:planktonic ratio",indicator))) %>% 
-  dplyr::select(availability,indicator, norm_base_value, norm_oil_value) %>% 
-  ggplot( aes(x=indicator, y=norm_base_value)) +
-  geom_segment(aes(x=indicator, xend=indicator, y=norm_oil_value, yend=norm_base_value), color="darkgrey") +
-  geom_point(aes(color=availability),size=5, alpha=0.7) +
-  geom_point(aes(y=norm_oil_value, color=availability), size=5, alpha=0.7) +
-  coord_flip() +
-  theme_classic()+
-  ylab("Value") + 
-  xlab("Indicator") +
-  ylim(0,1)+
-  theme(legend.position="bottom")+
-  scale_color_continuous(name="Availability")
-
-
-  ggsave("indicator_allmeso.png", eco.allav.plot, device="png",width=13, height = 11, units="cm")
 
 
 ```

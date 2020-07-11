@@ -14,10 +14,11 @@
 #sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/7/libgfortran.so /usr/lib/x86_64-linux-gnu/
 
 
-.packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
+.packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap",
+              "ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
               "rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
               "colorRamps","colorspace","RNetCDF","parallel",
-              "doSNOW","emdbook","plotly","ggiraphExtra","viridis")
+              "doSNOW","emdbook","plotly","ggiraphExtra","viridis","ncdf4")
 
 #.packages = c("rgdal","data.table","tidyverse","here","maptools","broom","ggmap","rfishbase","devtools", "sf", "tmap","ggspatial","rgeos", "raster", "spData","spDataLarge","sp","rnaturalearth","rnaturalearthdata",
 #"rnaturalearthhires", "readxl","scales","GGally","network","sna","RColorBrewer","grDevices",
