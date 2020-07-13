@@ -901,3 +901,40 @@ radar.plot.wf <- norm.indicator.data.wf %>%
 ```
 
 
+Calculate economic benefit
+```{r}
+
+catch.species <- read_csv("GulfGroups.csv") %>% 
+  dplyr::rename(group= `Long Name`)
+
+group.composition <- read_xlsx("Species_lists.xlsx", sheet="group_species_composition") %>% 
+  mutate(scientific_name= tolower(scientific_name)) %>% 
+  left_join(catch.species, by="group") %>% 
+  filter(isFished==1)
+
+group.table <- group.composition %>% 
+  distinct(group)
+
+catch.data <- read_csv("NOAA_foss_commercial_landings_GOM.csv") %>% 
+  rename(scientific_name =  `Scientific Name`) %>% 
+  mutate(scientific_name= tolower(scientific_name)) %>% 
+  filter(!is.na(Pounds)) %>% 
+  filter(!is.na(Dollars)) %>% 
+  mutate(weight_kg = (Pounds * 0.45359237), dollar_kg = Dollars/ weight_kg) %>% 
+  group_by(scientific_name) %>% 
+  summarise(dollar_kg = mean(dollar_kg))
+  
+value.group <- group.composition %>% 
+  left_join(catch.data, by="scientific_name") %>% 
+  filter(!is.na(dollar_kg)) %>%
+  group_by(group) %>% 
+  summarise(dollar_kg = mean(dollar_kg)) 
+
+group.table %>% 
+  left_join(value.group, by="group") %>% 
+  filter(is.na(dollar_kg))
+
+write_csv(value.group, "catch_value_table.csv")
+
+```
+
