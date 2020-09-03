@@ -1,0 +1,39 @@
+predator name,deep water fish,small demersal fish,other demersal fish,tot_prey
+blacktip shark,1,1,1,3
+blue marlin,1,0,0,1
+bluefin tuna,1,1,1,3
+deep serranidae,1,1,1,3
+deep water fish,1,1,0,2
+diving birds,1,1,1,3
+flatfish,0,1,1,2
+gag grouper,0,1,1,2
+greater amberjack,1,0,0,1
+jacks,1,1,1,3
+king mackerel,1,0,0,1
+ladyfish,0,1,0,1
+large pelagic fish,1,1,1,3
+large reef fish,0,1,1,2
+large sharks,1,1,1,3
+lutjanidae,0,1,1,2
+other billfish,1,0,0,1
+other demersal fish,0,1,1,2
+other tuna,0,1,1,2
+pompano,0,0,1,1
+red drum,0,1,1,2
+red grouper,0,1,1,2
+red snapper,1,1,1,3
+scamp,0,1,1,2
+sciaenidae,0,1,1,2
+seatrout,0,1,1,2
+shallow serranidae,1,1,1,3
+skates and rays,1,0,1,2
+small demersal fish,0,1,1,2
+small pelagic fish,0,1,0,1
+small reef fish,0,1,1,2
+small sharks,1,0,1,2
+snook,0,1,1,2
+surface feeding birds,0,1,1,2
+swordfish,1,0,0,1
+vermilion snapper,1,1,1,3
+white marlin,1,0,0,1
+yellowfin tuna,1,0,0,1

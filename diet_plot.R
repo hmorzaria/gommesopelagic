@@ -111,6 +111,13 @@ diet_plot <- function(preynames,groupnames,availabilitymatrix,filename) {
     ps.preymatrix %>% 
       dplyr::select(`deep water fish`,`small demersal fish`,`other demersal fish`) %>% 
     summarise_each(funs(sum))
+    
+    ps.preymatrix %>% 
+      dplyr::select(`predator name`,`deep water fish`,`small demersal fish`,`other demersal fish`) %>% 
+      group_by(`predator name`) %>% 
+      mutate(tot_prey = sum(`deep water fish`,`small demersal fish` ,`other demersal fish`)) %>% 
+      filter(tot_prey>0) %>% 
+      write_csv("mesopelagic_pred.csv")
   
   colnames(ps.matrix) <- NULL
   
