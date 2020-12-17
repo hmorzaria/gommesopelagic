@@ -1,0 +1,39 @@
+id,label,habitat_classification
+1,Blacktip shark,Reef-Associated
+2,Blue marlin,Pelagic-Oceanic
+3,Bluefin tuna,Pelagic-Oceanic
+4,Deep serranidae,Demersal
+5,Deep water fish,Mesopelagic
+6,Diving birds,Seabirds
+7,Flatfish,Demersal
+8,Gag grouper,Reef-Associated
+9,Greater amberjack,Reef-Associated
+10,Jacks,Reef-Associated
+11,King mackerel,Reef-Associated
+12,Ladyfish,Reef-Associated
+13,Large pelagic fish,Pelagic-Oceanic
+14,Large reef fish,Reef-Associated
+15,Large sharks,Reef-Associated
+16,Lutjanidae,Reef-Associated
+17,Other billfish,Pelagic-Oceanic
+18,Other demersal fish,Mesopelagic
+19,Other tuna,Pelagic-Neritic
+20,Pompano,Reef-Associated
+21,Red drum,Demersal
+22,Red grouper,Reef-Associated
+23,Red snapper,Reef-Associated
+24,Scamp,Reef-Associated
+25,Sciaenidae,Demersal
+26,Seatrout,Demersal
+27,Shallow serranidae,Reef-Associated
+28,Skates and rays,Demersal
+29,Small demersal fish,Mesopelagic
+30,Small pelagic fish,Pelagic-Neritic
+31,Small reef fish,Reef-Associated
+32,Small sharks,Bathydemersal
+33,Snook,Reef-Associated
+34,Surface feeding birds,Seabirds
+35,Swordfish,Pelagic-Oceanic
+36,Vermilion snapper,Demersal
+37,White marlin,Pelagic-Oceanic
+38,Yellowfin tuna,Pelagic-Oceanic

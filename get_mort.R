@@ -32,7 +32,7 @@ get_mort <- function(this.scenario,mult.seq, col.names) {
   this.availability <- mult.seq[this.simulation]
   
   
-  mort.prey <- fread("GOM_OUTMortPerPred.txt", skip = 3, fill = TRUE) %>% 
+   mort.prey <- fread("GOM_OUTMortPerPred.txt", skip = 3, fill = TRUE) %>% 
     as_tibble() %>% 
     setNames(col.names) %>% 
     filter(!is.na(startN)) %>% 
@@ -51,36 +51,26 @@ get_mort <- function(this.scenario,mult.seq, col.names) {
     dplyr::select(-Time) %>% 
     mutate(end_prey = if_else(end_mortality!=0,1,end_mortality))
   
-  tot.mort <- initial.mort %>% 
-    left_join(end.mort, by=c("prey","predator")) %>% 
-    mutate(new_prey = if_else(ini_prey==0 & end_prey ==1, 1,0),
-           lost_prey = if_else(ini_prey==1 & end_prey ==0,1,0))
-  
-  prey.summary <- tot.mort %>% 
-    group_by(predator) %>% 
-    summarize(tot_ini = sum(ini_prey), 
-              tot_end = sum(end_prey), 
-              tot_new=sum(new_prey), 
-              tot_lost = sum(lost_prey)) %>% 
-    mutate(availability = this.availability, run = this.run)
-  
-    sum.mort <- tot.mort %>% 
-      group_by(predator) %>% 
-      summarise(sum_ini_mort=sum(ini_mortality),sum_end_mort=sum(end_mortality))
-
-    mort.summary <- tot.mort %>% 
-      left_join(sum.mort, by="predator") %>% 
-      mutate(prop_end = end_mortality/sum_end_mort) %>% 
-      mutate(prop_end=if_else(is.nan(prop_end),0,prop_end)) %>% 
-      arrange(predator,prey) %>% 
-      mutate(availability = this.availability, run = this.run) %>% 
-      group_by(predator) %>% 
-      mutate(sum_prop_end = sum(prop_end)) %>% 
-      filter(sum_prop_end!=0)
+  combined.mort <- initial.mort %>% 
+    left_join(end.mort, by=c("prey","predator")) 
     
-  print(paste(this.availability,this.run))
+  tot.mort <- combined.mort %>% 
+    group_by(predator) %>% 
+    summarize(tot_ini_mortality=sum(ini_mortality), tot_end_mortality=sum(end_mortality))
+    
+  tot.norm.mort <- combined.mort %>% 
+    left_join(tot.mort, by=c("predator")) %>% 
+    mutate(norm_ini_mortality = ini_mortality/ tot_ini_mortality,
+           norm_end_mortality = end_mortality/ tot_end_mortality) %>% 
+    mutate(new_prey = if_else(ini_prey==0 & end_prey ==1, 1,0),
+           lost_prey = if_else(ini_prey==1 & end_prey ==0,1,0)) %>% 
+    mutate(norm_ini_mortality=if_else(is.nan(norm_ini_mortality),0,norm_ini_mortality)) %>% 
+    mutate(norm_end_mortality=if_else(is.nan(norm_end_mortality),0,norm_end_mortality)) %>% 
+    mutate(availability=this.availability,run=this.run, run_no=this.simulation)
+  
+ print(paste(this.availability,this.run))
     
   setwd("~/gom_runs/runs_ppreyvalues")
   
-  return(mort.summary)
+  return(tot.norm.mort)
 }

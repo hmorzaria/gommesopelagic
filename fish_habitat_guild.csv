@@ -1,0 +1,49 @@
+long_name,n,habitat_classification,group,guild,habit
+Benthic feeding sharks,4,Bathydemersal,BEN,Demersal,Demersal
+Bioeroding fish,7,Reef-Associated,BIO,Reef fish,Pelagic
+Black drum,1,Demersal,BDR,Demersal,Demersal
+Blacktip shark,1,Reef-Associated,TIP,Reef fish,Pelagic
+Blue marlin,1,Pelagic-Oceanic,BMR,Pelagic,Pelagic
+Bluefin tuna,1,Pelagic-Oceanic,BTN,Pelagic,Pelagic
+Deep serranidae,10,Demersal,DSR,Demersal,Demersal
+Deep water fish,89,Mesopelagic,DWF,Mesopelagic,Pelagic
+Filter feeding sharks,2,Pelagic-Oceanic,FIL,Pelagic,Pelagic
+Flatfish,25,Demersal,FLT,Demersal,Demersal
+Gag grouper,1,Reef-Associated,GAG,Reef fish,Pelagic
+Greater amberjack,1,Reef-Associated,AMB,Pelagic,Pelagic
+Jacks,14,Reef-Associated,JCK,Pelagic,Pelagic
+King mackerel,1,Reef-Associated,KMK,Reef fish,Pelagic
+Ladyfish,1,Reef-Associated,LDY,Reef fish,Pelagic
+Large pelagic fish,15,Pelagic-Oceanic,LPL,Pelagic,Pelagic
+Large reef fish,40,Reef-Associated,LRF,Reef fish,Pelagic
+Large sharks,11,Reef-Associated,LGS,Pelagic,Pelagic
+Little tunny,1,Reef-Associated,LTN,Pelagic,Pelagic
+Lutjanidae,10,Reef-Associated,LUT,Reef fish,Pelagic
+Medium pelagic fish,8,Pelagic-Oceanic,MPL,Pelagic,Pelagic
+Menhaden,3,Pelagic-Neritic,MEN,Pelagic,Pelagic
+Mullets,1,Reef-Associated,MUL,Pelagic,Demersal
+Other billfish,3,Pelagic-Oceanic,BIL,Pelagic,Pelagic
+Other demersal fish,46,Mesopelagic,ODF,Mesopelagic,Demersal
+Other tuna,2,Pelagic-Neritic,OTN,Pelagic,Pelagic
+Pinfish,1,Demersal,PIN,Demersal,Demersal
+Pompano,2,Reef-Associated,POM,Demersal,Demersal
+Red drum,1,Demersal,RDR,Demersal,Demersal
+Red grouper,1,Reef-Associated,RGR,Reef fish,Pelagic
+Red snapper,1,Reef-Associated,RSN,Reef fish,Pelagic
+Scamp,1,Reef-Associated,SCM,Reef fish,Pelagic
+Sciaenidae,11,Demersal,SCI,Demersal,Demersal
+Seatrout,3,Demersal,SEA,Demersal,Demersal
+Shallow serranidae,22,Reef-Associated,SSR,Reef fish,Pelagic
+Sheepshead,1,Reef-Associated,SHP,Reef fish,Pelagic
+Skates and rays,15,Demersal,RAY,Demersal,Demersal
+Small demersal fish,87,Mesopelagic,SDF,Mesopelagic,Demersal
+Small pelagic fish,23,Pelagic-Neritic,SPL,Pelagic,Pelagic
+Small reef fish,82,Reef-Associated,SRF,Reef fish,Pelagic
+Small sharks,7,Bathydemersal,SMS,Demersal,Demersal
+Snook,1,Reef-Associated,SNK,Reef fish,Demersal
+Spanish mackerel,7,Benthopelagic,SMK,Pelagic,Pelagic
+Spanish sardine,1,Reef-Associated,SAR,Reef fish,Pelagic
+Swordfish,1,Pelagic-Oceanic,SWD,Pelagic,Pelagic
+Vermilion snapper,1,Demersal,VSN,Demersal,Demersal
+White marlin,1,Pelagic-Oceanic,WMR,Pelagic,Pelagic
+Yellowfin tuna,1,Pelagic-Oceanic,YTN,Pelagic,Pelagic

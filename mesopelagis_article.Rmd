@@ -16,18 +16,23 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 setwd("~/gommesopelagic")
 
 source("libraries.R")
-
 source("make_map.R")
 source("get_fishbasedata.R")
 source("get_fishbaseecology.R")
-source("diet_plot.R")
+source("diet_plot_meso_var.R")
 source("get_catch_box.R")
+source("get_catch_fishery.R")
 source("get_catch.R")
 source("get_biomass.R")
+source("plot_biomass.R")
+source("plot_niche_width.R")
+source("calc_niche_width.R")
 source("get_pprey.R")
 source("get_mort.R")
 source("get_indicators.R")
-source("get_net_benefit.R")
+source("plot_fishery_catch.R")
+source("plot_prey_mortality.R")
+#source("get_net_benefit.R")
 
 
 ```
@@ -72,11 +77,16 @@ common.habitat <- fish.habitat %>%
   
 head(common.habitat)
 
-common.habitat %>% 
-  rename(long_name = group) %>% 
-  right_join(guild.names, by="long_name") 
 
 write_csv(common.habitat, "habitat_fish_categories.csv")
+#this file was edited manually to remove duplicate species and saved as habitat_fish_categories_rev.csv
+
+#this file was edited manually so commenting so I won't overwrite
+# common.habitat %>% 
+#   rename(long_name = group) %>% 
+#   right_join(guild.names, by="long_name") %>% 
+#   filter(!is.na(habitat_classification)) %>% 
+#   write_csv("fish_habitat_guild.csv")
 
 
 ```
@@ -85,10 +95,17 @@ write_csv(common.habitat, "habitat_fish_categories.csv")
 
 ```{r foodweb diagram, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
 
-foodweb_map<- diet_plot(preynames="prey_names.csv", groupnames="Group_Names.csv", availabilitymatrix = "availabilities_matrix.csv", filename="gom_foodweb.png")
+foodweb_map <- diet_plot(preynames="prey_names.csv", groupnames="Group_Names.csv", availabilitymatrix = "availabilities_matrix.csv", filename="gom_foodweb.png", network.type = "prey",fishguilds = "fish_habitat_guild.csv")
+
+foodweb_map
 
 
-common.habitat <- read_csv("habitat_fish_categories.csv") %>% 
+```
+
+Mesopelagic predators
+
+```{r}
+common.habitat <- read_csv("habitat_fish_categories_rev.csv") %>% 
   dplyr::rename(`predator name`=group) %>% 
   mutate(`predator name` = tolower(`predator name`))
 
@@ -278,6 +295,8 @@ baseline.data <- fread("~/gom_runs/gommodeloilmeso_revvertdist/output/GOM_OUTBox
   group_by(Box,species) %>% 
   summarise(biomass = mean(biomass))
 
+#Analyze oil values
+
 prey.meso.list <- grep("run_gom_oilmeso_dist_mpprey", biom.list, value=TRUE)
 
 file.nums <- 1:length(prey.meso.list)
@@ -287,7 +306,7 @@ meso.data <- lapply(file.nums,get_biomass,prey.meso.list, max.time, this.scenari
   filter(Time %in% max.time) %>% 
   group_by(Box,species,preyvalue,scenario) %>% 
   summarise(biomass = mean(biomass))
- 
+
 #Analyze no oil runs and pprey values
 
 prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", biom.list, value=TRUE)
@@ -309,6 +328,7 @@ ratio.data <- meso.data %>%
 write_csv(ratio.data,"biomass_results.csv")
 
 
+
 ```
 
 Plot biomass for the whole model and just for the West Florida Shelf
@@ -316,122 +336,21 @@ Plot biomass for the whole model and just for the West Florida Shelf
 #smoothing from
 #https://stats.idre.ucla.edu/r/faq/how-can-i-explore-different-smooths-in-ggplot2/
   
-ratio.data <- read_csv("biomass_results.csv") 
-
+biomass.ratio.data <- read_csv("biomass_results.csv") 
 
 west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
 
-common.habitat <- read_csv("habitat_fish_categories.csv") %>% 
+#habitat categories were checked manually and compared to Fishbase species pages to remove duplicates
+common.habitat <- read_csv("habitat_fish_categories_rev.csv") %>% 
   dplyr::rename(long_name=group) 
 
-ratio.plot.meso.data <- ratio.data %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  mutate(ratio = biomass/biomass_base) %>% 
-  filter(guild=="Pelagic") %>% 
-  filter(long_name %in% c("Large pelagic fish",
-                          "Yellowfin tuna",
-                          "Bluefin tuna",
-                          "Other tuna",
-                          "White marlin",
-                          "Jacks",
-                          "Large sharks")) %>% 
-  left_join(common.habitat, by = "long_name")
+meso.predators <- read_csv("mesopelagic_predators.csv")
 
-col.pal <- redmonder.pal(4,"qMSOBu")[2:4]
+demersal.sp <- c("Deep water fish","Other demersal fish","Small demersal fish")
 
-ratio.plot.meso <- ratio.plot.meso.data %>% 
-  ggplot(aes(x=preyvalue, y=ratio, color = habitat_classification)) + 
-  geom_point()+
-  scale_color_manual(values=col.pal)+
-  #  facet_wrap(long_name ~., scales="free_y")+
-  facet_wrap(long_name ~.)+
-  theme_classic()+
-  theme(legend.position = "bottom")+
-  labs(color="Habitat classification")+
-  ylab("Biomass ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
-#  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
- 
-
-ggsave("pprey_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=16, height = 13, units="cm")
+plot_biomass(biomass.ratio.data,west.fl.pol,common.habitat,meso.predators, demersal.sp)
 
 
-ratio.plot.meso.wf <- ratio.data %>% 
-  filter(Box %in% west.fl.pol) %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  mutate(ratio = biomass/biomass_base) %>% 
-  filter(guild=="Pelagic") %>%  
-  filter(long_name %in% c("Large pelagic fish",
-                            "Yellowfin tuna",
-                            "Bluefin tuna",
-                            "Other tuna",
-                            "White marlin",
-                            "Jacks",
-                            "Large sharks")) %>% 
-    left_join(common.habitat, by = "long_name") %>% 
- ggplot(aes(x=preyvalue, y=ratio, color = habitat_classification)) + 
-  geom_point()+
-  scale_color_manual(values=col.pal)+
-  #  facet_wrap(long_name ~., scales="free_y")+
-  facet_wrap(long_name ~.)+
-  theme_classic()+
-  theme(legend.position = "bottom")+
-  labs(color="Habitat classification")+
-  ylab("Biomass ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")   
-
-ggsave("pprey_ratio_pelagic_plot_wf.png", ratio.plot.meso, device="png",width=16, height = 13, units="cm")
-
-col.pal <- redmonder.pal(8,"qMSOBu")[2:8]
-
-ratio.plot.all <- ratio.data %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  mutate(ratio = biomass/biomass_base) %>%
-  filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
-                       "Plankton", "Primary producers","Infauna",
-                       "Filter feeders","Epibenthos","Sea turtles","Squid",
-                       "Seabirds","Marine mammals")) %>% 
-  left_join(common.habitat, by = "long_name") %>% 
- ggplot(aes(x=preyvalue, y=ratio, color = habitat_classification)) + 
-  geom_point()+
-  scale_color_manual(values=col.pal)+
-  facet_wrap(long_name ~., scales="free_y")+
-  #facet_wrap(long_name ~.)+
-  theme_classic()+
-  theme(legend.position = "bottom")+
-  labs(color="Habitat classification")+
-  ylab("Biomass ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")   
-ggsave("pprey_ratio_plot.png", ratio.plot.all, device="png",width=20, height = 10, dpi=300)
-
-ratio.plot.all.wf <- ratio.data %>% 
-  filter(Box %in% west.fl.pol) %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  mutate(ratio = biomass/biomass_base) %>% 
-  filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
-                       "Plankton", "Primary producers","Infauna",
-                       "Filter feeders","Epibenthos","Sea turtles","Squid",
-                       "Seabirds","Marine mammals")) %>% 
-  left_join(common.habitat, by = "long_name") %>% 
- ggplot(aes(x=preyvalue, y=ratio, color = habitat_classification)) + 
-  geom_point()+
-  scale_color_manual(values=col.pal)+
-  facet_wrap(long_name ~., scales="free_y")+
-  #facet_wrap(long_name ~.)+
-  theme_classic()+
-  theme(legend.position = "bottom")+
-  labs(color="Habitat classification")+
-  ylab("Biomass ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")   
-ggsave("pprey_ratio_plot_wf.png", ratio.plot.all.wf, device="png",width=20, height = 10, dpi=300)
 ```
 
 
@@ -462,8 +381,8 @@ mult.seq <- lseq(0.00001,0.85,32)
 col.names <-c("Time","prey","startN","mL","mQ","implicitMortality","GAG","RGR","SCM","SSR","DSR","RSN","VSN","LUT","BIO","LRF","SRF","BDR","RDR","SEA","SCI","LDY","MUL","POM","SHP","SNK","FLT","ODF","SDF","YTN","BTN","LTN","OTN","SWD","WMR","BMR","BIL","AMB","JCK","KMK","SMK","SAR","LPL","DWF","MEN","PIN","MPL","SPL","TIP","BEN","LGS","FIL","SMS","RAY","BSH","WSH","PSH","OSH","DBR","SBR","MAN","MYS","DOL","DDO","LOG","KMP","TUR","BCR","SCR","LOB","COR","CCA","OCT","SPG","CMB","INF","ECH","OYS","BIV","SES","EPI","GRS","ALG","MPB","LPP","SPP","DIN","PRO","JEL","SQU","LZP","SZP","PB","BB","DC","DL","DR","TotalPredMort")
 
 base.prey <- get_mort(this.scenario = "~/gom_runs/gommodeloilmeso_revvertdist/output",mult.seq, col.names) %>% 
-  dplyr::rename(base_end_mort=end_mortality, base_sum_end = sum_end_mort, base_prop_end = prop_end) %>% 
-  dplyr::select(predator, prey, base_end_mort, base_sum_end, base_prop_end)
+  dplyr::rename(base_norm_ini_mortality=norm_ini_mortality, base_norm_end_mortality = norm_end_mortality) %>% 
+  dplyr::select(predator, prey, base_norm_ini_mortality, base_norm_end_mortality )
 
 setwd("~/gom_runs/runs_ppreyvalues")
 
@@ -472,13 +391,75 @@ pprey.mort <- lapply(folder.paths, get_mort,mult.seq, col.names) %>%
 
 
 heatmap.prey <- pprey.mort %>% 
-  left_join(base.prey, by = c("predator","prey")) %>% 
-  left_join(guild.names, by=c("predator"))
+   left_join(guild.names, by=c("predator"))
   
 
 write_csv(heatmap.prey,"~/gommesopelagic/prey_mortality.csv")
 
   
+```
+
+Calculate niche width
+The niche width was estimated from the antilogarithm of the Shannon-Weaver’s indexH (Hill,1973),calculated as H=−∑ni pi*ln(pi), where pi is the end proportion of the realized predation mortality
+```{r niche width, message=FALSE, warning=FALSE, include=FALSE}
+
+setwd("~/gommesopelagic")
+
+
+heatmap.prey <- read_csv("prey_mortality.csv")
+
+mult.seq <- lseq(0.00001,0.85,32)
+
+predator.list <- heatmap.prey %>%
+  distinct(predator) %>% 
+  pull(predator)
+  
+niche.width <- lapply(predator.list,calc_niche_width, heatmap.prey, mult.seq, this.run= "oilmeso") %>% 
+bind_rows 
+
+niche.width.stan <- niche.width %>% 
+  mutate(standarized_H = H/log(no_resources)) %>% 
+  mutate(standarized_H2 = H/max(H)) #Spanish sardine is the only strictly planktonic group so H is 0
+
+write_csv(niche.width.stan, "niche_width_oilmeso.csv")
+
+
+niche.width <- lapply(predator.list,calc_niche_width, heatmap.prey, mult.seq, this.run= "nooil") %>% 
+bind_rows 
+
+niche.width.stan <- niche.width %>% 
+  mutate(standarized_H = H/log(no_resources)) %>% 
+  mutate(standarized_H2 = H/max(H)) #Spanish sardine is the only strictly planktonic group so H is 0
+
+write_csv(niche.width.stan, "niche_width_nooil.csv")
+
+```
+
+Plot niche width
+```{r plot niche width, include=FALSE}
+
+common.habitat <- read_csv("habitat_fish_categories_rev.csv") %>% 
+  dplyr::rename(`predator name`=group) %>% 
+  mutate(`predator name` = tolower(`predator name`))
+
+atlantis.groups <- read_xlsx("Species_lists.xlsx", sheet = "group_names") %>% 
+  rename(predator=Code, `predator name` = `Long Name`) %>% 
+  mutate(`predator name` = tolower(`predator name`))
+
+meso.predator.fish <- read_csv("mesopelagic_predators.csv") %>% 
+  mutate(label = tolower(label)) %>% 
+  pull(label)
+
+demersal.sp <- c("deep water fish","other demersal fish","small demersal fish")
+
+niche.data <- read_csv("niche_width_oilmeso.csv")
+                             
+plot_niche_width(niche.data, atlantis.groups, common.habitat, meso.predator.fish, demersal.sp,file.name = "niche_width_plot_oilmeso.png")
+
+niche.data <- read_csv("niche_width_nooil.csv")
+                             
+plot_niche_width(niche.data, atlantis.groups, common.habitat, meso.predator.fish, demersal.sp,file.name = "niche_width_plot_nooil.png")
+
 ```
 
 
@@ -487,116 +468,33 @@ Plot prey mortality
 
 setwd("~/gommesopelagic")
 
-guild.names <- read_csv("fg_guild_names.csv") %>% 
-  dplyr::rename(prey=group, prey_name=long_name, prey_guild = guild)
-
 heatmap.prey <- read_csv("prey_mortality.csv")
 
-pel.groups <- c("Large pelagic fish",
-                            "Yellowfin tuna",
-                            "Bluefin tuna",
-                            "Other tuna",
-                            "White marlin",
-                            "Jacks",
-                            "Large sharks")
+common.habitat <- read_csv("habitat_fish_categories_rev.csv") %>% 
+  dplyr::rename(`long_name`=group)
 
-heatmap.data <- heatmap.prey %>% 
-  filter(long_name %in% pel.groups) %>% 
-  group_by(run, predator, availability) %>%
-  mutate(cum_prop_end = cumsum(prop_end)) %>% 
-  filter(prop_end != 0) %>% 
-  filter(cum_prop_end > 0.30) %>% 
-  ungroup %>% 
-  left_join(guild.names, by="prey") %>% 
-  mutate(prop_change = (((prop_end - base_prop_end)/base_prop_end) * 100)) %>% 
-  filter(prey_guild %in% c("Demersal","Mesopelagic","Pelagic","Reef fish")) %>% 
-  mutate(prop_change = if_else(is.infinite(prop_change),100,prop_change)) %>% 
-  mutate(num_availability = dense_rank(availability))
+atlantis.groups <- read_xlsx("Species_lists.xlsx", sheet = "group_names") %>% 
+  rename(prey=Code, `long_name` = `Long Name`) 
 
+species.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") 
 
-mycols2 <- redmonder.pal(8,"qMSOAsp")[2:8]
+guild.names <- read_csv("fg_guild_names.csv")
 
-myshapes <-c(15,17,19,8) 
+fish.groups <- species.composition %>% 
+  distinct(group) %>% 
+  rename(long_name=group) %>% 
+  left_join(guild.names, by = "long_name") %>% 
+  pull(group)
 
-prey.mortality <- ggplot(heatmap.data, aes(x=availability, y=prop_end, color=prey_guild, shape = prey_guild)) +
-  geom_point(size=2, alpha = 0.5) +
-  scale_color_manual(values=mycols2, name="Prey guild") +
-  scale_shape_manual(values=myshapes, name="Prey guild")+
-  facet_wrap(long_name ~.)+
-  theme_classic() +
-  ylab("Predation mortality") + 
-  xlab("Prey availability")+
-  theme(legend.position="bottom")
+meso.predator.fish <- read_csv("mesopelagic_predators.csv") %>% 
+  #mutate(label = tolower(label)) %>% 
+  pull(label)
 
-ggsave("pprey_mortality_plot.png", prey.mortality, device="png",width=14, height = 12, units="cm")
+demersal.sp <- c("Deep water fish","Other demersal fish","Small demersal fish")
 
+plot_prey_mortality(heatmap.prey, common.habitat, atlantis.groups, meso.predator.fish, demersal.sp, this.run = "oilmeso", fish.groups)
 
-# ggplot(heatmap.data, aes(fill=prey_name, y=prop_change, x=long_name, group=num_availability)) + 
-#    geom_bar(stat="identity", position = "dodge")+
-#    theme_classic() +
-#   coord_flip()+
-#   facet_wrap(num_availability ~.)
-   
-
-# cl <- colors(distinct = TRUE)
-# set.seed(345215) # to set random generator seed
-# mycols2 <- sample(cl, length(unique(heatmap.data$prey_guild)))
-
-# mycols2 <- c("tan4", #bacteria
-#              "magenta3", #demersal
-#              "orange", #epibenthos
-#              "deepskyblue1", #filterfeeders
-#              "dodgerblue4", #mesopelagic
-#              "skyblue3", #pelagic
-#              "darkseagreen", # plankton
-#              "seagreen4", #primary producers
-#              "cyan3", # reef fish
-#              "violetred4", # sea turtles
-#              "darkorchid2", # seabirds
-#              "darkgoldenrod3") # squid
-
-
-
-# ggplot(heatmap.data, aes(x=base_prop_end, xend=prop_end, y=availability, group=prey_guild)) + 
-#   geom_dumbbell(point.colour.r="#a3c4dc", 
-#                 size=0.75, 
-#                 point.colour.l="#0e668b") + 
-#   facet_wrap(long_name ~.)
-# scale_x_continuous(label=prop_end)
-# 
-# ggplot(heatmap.data, aes(x=availability, y=prop_end, group=prey, color = prey_guild)) + 
-#   geom_boxplot() +
-#   scale_color_manual(values=mycols2) +
-#   #  scale_color_brewer(palette = "Dark2")+
-#   facet_wrap(long_name ~.)
-# 
-# ggplot(heatmap.data, aes(area = prop_end_per, fill = prey_guild, label = prey_guild)) +
-#   geom_treemap() +
-#   geom_treemap_text(fontface = "italic", colour = "white", place = "centre",
-#                     grow = TRUE)+
-#   facet_wrap(long_name ~.)
-# 
-# ggplot(heatmap.data, aes(prop_end, colour = long_name)) + stat_ecdf()+
-#   facet_wrap(availability ~.)
-# 
-# # Plot again
-# ggplot(heatmap.data, aes(x=availability, y=prop_end_per, fill=prey_guild)) + 
-#   geom_area()+
-#   scale_color_brewer(palette = "Dark2")+
-#   facet_wrap(long_name ~.)
-# 
-# ggplot(heatmap.data, aes(fill=prey_guild, y=prop_end, x=availability)) + 
-#   geom_bar(position="stack", stat="identity")+
-#   theme_classic() +
-#   facet_wrap(long_name ~.)
-# 
-# # filter(prop_end!=0) %>%   
-# heatmap.data %>% 
-#   ggplot(aes(predator,prey, fill = prop_end)) + 
-#   geom_tile(aes(fill = prop_end)) + 
-#   scale_fill_gradient(low = "lightblue", high = "firebrick4")+
-#   theme_classic() +
-#   facet_wrap(availability ~.)
+plot_prey_mortality(heatmap.prey, common.habitat, atlantis.groups, meso.predator.fish, demersal.sp, this.run = "nooil", fish.groups)
 
 
 ```
@@ -660,74 +558,22 @@ Plot catch data
 
 ratio.data <- read_csv("catch_box_results.csv") 
 
-common.habitat <- read_csv("habitat_fish_categories.csv") %>% 
-  dplyr::rename(long_name=group) 
+common.habitat <- read_csv("habitat_fish_categories_rev.csv") %>% 
+  dplyr::rename(`long_name`=group)
+
+atlantis.groups <- read_xlsx("Species_lists.xlsx", sheet = "group_names") %>% 
+  rename(prey=Code, `long_name` = `Long Name`) 
+
+meso.predator.fish <- read_csv("mesopelagic_predators.csv") %>% 
+  #mutate(label = tolower(label)) %>% 
+  pull(label)
+
+demersal.sp <- c("Deep water fish","Other demersal fish","Small demersal fish")
 
 west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
 
-col.pal <- redmonder.pal(8,"qMSOBu")[c(4,8,2,3,7)]
-
-ratio.data.catch.wf <- ratio.data %>% 
-    filter(Box %in% west.fl.pol) %>% 
-    filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
-                       "Plankton", "Primary producers","Infauna",
-                       "Filter feeders","Epibenthos","Sea turtles","Squid",
-                       "Seabirds","Marine mammals")) %>% 
-  left_join(common.habitat, by="long_name") %>% 
-   group_by(preyvalue, guild, long_name, habitat_classification) %>% 
-  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
-  mutate(catch_ratio = tot_catch / tot_catch_base) %>% 
-  filter(!is.nan(catch_ratio))
-  #pivot_longer(cols=c("tot_catch","tot_catch_base"),names_to = "scenario")
+plot_catch(ratio.data, common.habitat, atlantis.groups, meso.predator.fish, demersal.sp, west.fl.pol)
   
-  ratio.plot.catch.wf <- ratio.data.catch.wf %>% 
-   ggplot(aes(x=preyvalue, y=catch_ratio, color = habitat_classification)) + 
-  geom_point()+
-  scale_color_manual(values = col.pal)+
-  facet_grid(guild ~ ., scales = "free_y")+
-  theme_classic()+
-  theme(legend.position = "right")+
-    labs(color ="Habitat classification")+ 
-  ylab("Catch ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
- #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
- 
-
-ggsave("pprey_ratio_catch_guild_wf.png", ratio.plot.catch.wf, device="png",width=14, height = 15, units="cm")
-
-ratio.data.catch <- ratio.data %>% 
-    filter(Box %in% west.fl.pol) %>% 
-    filter(!guild %in% c("Mesopelagic","Detritus","Bacteria",
-                       "Plankton", "Primary producers","Infauna",
-                       "Filter feeders","Epibenthos","Sea turtles","Squid",
-                       "Seabirds","Marine mammals")) %>% 
-  left_join(common.habitat, by="long_name") %>% 
-   group_by(preyvalue, guild, long_name, habitat_classification) %>% 
-  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
-  mutate(catch_ratio = tot_catch / tot_catch_base) %>% 
-  filter(!is.nan(catch_ratio))
-  #pivot_longer(cols=c("tot_catch","tot_catch_base"),names_to = "scenario")
-  
-
-col.pal <- redmonder.pal(8,"qMSOBu")[2:8]
-
-ratio.plot.catch <- ratio.data.catch %>%
-   ggplot(aes(x=preyvalue, y=catch_ratio, color = habitat_classification)) + 
-  geom_point()+
-  scale_color_manual(values=col.pal)+
-  labs(color="Habitat classification")+
-   facet_wrap(~ long_name, scales = "free_y")+
-  theme_classic()+
-  theme(legend.position = "bottom")+
-  ylab("Catch ratio") + 
-  xlab("Prey availability value") +
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
- #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
- 
-
-ggsave("pprey_ratio_catch_guild.png", ratio.plot.catch, device="png",width=20, height = 10, dpi=300)
-
 
 ```
 
@@ -971,10 +817,12 @@ radar.plot.wf <- norm.indicator.data.wf %>%
 
 Catch per fleet 
 
-```{r}
+```{r catch per fleet, include=FALSE}
+
 guild.names <- read_csv("fg_guild_names.csv") %>% 
   dplyr::rename(Code=group)
 
+gom_fisheries <- read_csv("GOM_fisheries.csv")
 
 mult.seq <- lseq(0.00001,0.85,32)
 
@@ -997,18 +845,30 @@ prey.nooil.list <- grep("run_gom_nooil_dist_mpprey", catch.fishery.list, value=T
 
 file.nums <- 1:length(prey.nooil.list)
 
-nooil.data <- lapply(file.nums,get_catch_fishery,prey.meso.list,max.time, this.scenario="no_oil") %>% 
-  bind_rows() %>% 
+nooil.data <- lapply(file.nums,get_catch_fishery,prey.nooil.list,max.time, this.scenario="no_oil") %>%  bind_rows() %>% 
   rename(base_catch=catch, base_scenario = scenario)
 
 
-ratio.data <- meso.data %>% 
+fishery.ratio.data <- meso.data %>% 
   left_join(nooil.data, by=c("Fishery","species","preyvalue")) %>% 
   dplyr::rename(Code=species) %>% 
   left_join(guild.names, by="Code") 
 
-write_csv(ratio.data,"catch_box_results.csv")
+write_csv(fishery.ratio.data,"catch_fishery_results.csv")
 
+species.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") 
+
+guild.names <- read_csv("fg_guild_names.csv")
+
+fish.groups <- species.composition %>% 
+  distinct(group) %>% 
+  rename(long_name=group) %>% 
+  left_join(guild.names, by = "long_name") %>% 
+  pull(group)
+
+invert.fleets <- c("PotCrbEst","OytEst","SprtShf","TwlShpShf","PotCrbShf","PotLbtShf","TwlShpMX","OctpsMX")
+
+plot_fishery_catch(fishery.ratio.data, gom_fisheries, fish.groups, invert.fleets)
 
 ```
 
@@ -1021,28 +881,10 @@ setwd("~/gommesopelagic")
 
 west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
 
-biomass.data <- read_csv("biomass_results.csv") %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  ungroup
+cost.rate  <- 0.655
 
-biomass.data.wf <- read_csv("biomass_results.csv") %>% 
-  filter(Box %in% west.fl.pol) %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  ungroup
-
-catch.data.wf <- read_csv("catch_box_results.csv") %>% 
-  filter(Box %in% west.fl.pol) %>% 
-  group_by(Code,preyvalue,long_name,guild,habit) %>% 
-  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
-  ungroup
-
-catch.data <- read_csv("catch_box_results.csv") %>% 
-  group_by(Code,preyvalue,long_name,guild,habit) %>% 
-  summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
-  ungroup
-
+common.habitat <- read_csv("habitat_fish_categories_rev.csv") %>% 
+  dplyr::rename(`long_name`=group)
 
 species.composition <- read_xlsx("Species_lists.xlsx", sheet = "group_species_composition") 
 
@@ -1070,7 +912,7 @@ group.composition <- read_xlsx("Species_lists.xlsx", sheet="group_species_compos
 group.table <- group.composition %>% 
   distinct(group)
 
-catch.data <- read_csv("NOAA_foss_commercial_landings_GOM.csv") %>% 
+catch.value <- read_csv("NOAA_foss_commercial_landings_GOM.csv") %>% 
   rename(scientific_name =  `Scientific Name`) %>% 
   mutate(scientific_name= tolower(scientific_name)) %>% 
   filter(!is.na(Pounds)) %>% 
@@ -1080,49 +922,23 @@ catch.data <- read_csv("NOAA_foss_commercial_landings_GOM.csv") %>%
   summarise(dollar_kg = mean(dollar_kg))
   
 value.group <- group.composition %>% 
-  left_join(catch.data, by="scientific_name") %>% 
+  left_join(catch.value, by="scientific_name") %>% 
   filter(!is.na(dollar_kg)) %>%
   group_by(group) %>% 
-  summarise(dollar_kg = mean(dollar_kg)) 
+  summarise(dollar_kg = mean(dollar_kg)) %>% 
+  rename(long_name = group)
 
-group.table %>% 
-  left_join(value.group, by="group") %>% 
-  filter(is.na(dollar_kg))
+box.catch <- read_csv("catch_box_results.csv")
 
-write_csv(value.group, "catch_value_table.csv")
+meso.predator.fish <- read_csv("mesopelagic_predators.csv") %>% 
+  #mutate(label = tolower(label)) %>% 
+  pull(label)
 
-
-
-```
-
-
-Calculate net benefit
-```{r}
-
-cost.rate = 0.655
-
-#biomass data
-ratio.data <- read_csv("biomass_results.csv") 
+demersal.sp <- c("Deep water fish","Other demersal fish","Small demersal fish")
 
 
-west.fl.pol <- c(31,1,25,42,6,5,34,55,12,64,24,32,33,27,28)
+plot_net_benefit(box.catch, west.fl.pol, value.group, common.habitat, fish.groups)
 
-common.habitat <- read_csv("habitat_fish_categories.csv") %>% 
-  dplyr::rename(long_name=group) 
-
-ratio.plot.meso.data <- ratio.data %>% 
-  group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
-  summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
-  mutate(ratio = biomass/biomass_base) %>% 
-  filter(guild=="Pelagic") %>% 
-  filter(long_name %in% c("Large pelagic fish",
-                          "Yellowfin tuna",
-                          "Bluefin tuna",
-                          "Other tuna",
-                          "White marlin",
-                          "Jacks",
-                          "Large sharks")) %>% 
-  left_join(common.habitat, by = "long_name")
 
 ```
 

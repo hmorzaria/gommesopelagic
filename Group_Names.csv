@@ -3,50 +3,50 @@ Gag grouper,GAG,Reef fish
 Red grouper,RGR,Reef fish
 Scamp,SCM,Reef fish
 Shallow serranidae,SSR,Reef fish
-Deep serranidae,DSR,Demersal
+Deep serranidae,DSR,Demersal fish
 Red snapper,RSN,Reef fish
-Vermilion snapper,VSN,Demersal
+Vermilion snapper,VSN,Demersal fish
 Lutjanidae,LUT,Reef fish
 Bioeroding fish,BIO,Reef fish
 Large reef fish,LRF,Reef fish
 Small reef fish,SRF,Reef fish
-Black drum,BDR,Demersal
-Red drum,RDR,Demersal
-Seatrout,SEA,Demersal
-Sciaenidae,SCI,Demersal
+Black drum,BDR,Demersal fish
+Red drum,RDR,Demersal fish
+Seatrout,SEA,Demersal fish
+Sciaenidae,SCI,Demersal fish
 Ladyfish,LDY,Reef fish
-Mullets,MUL,Pelagic
-Pompano,POM,Demersal
+Mullets,MUL,Pelagic fish
+Pompano,POM,Demersal fish
 Sheepshead,SHP,Reef fish
 Snook,SNK,Reef fish
-Flatfish,FLT,Demersal
+Flatfish,FLT,Demersal fish
 Other demersal fish,ODF,Mesopelagic
 Small demersal fish,SDF,Mesopelagic
-Yellowfin tuna,YTN,Pelagic
-Bluefin tuna,BTN,Pelagic
-Little tunny,LTN,Pelagic
-Other tuna,OTN,Pelagic
-Swordfish,SWD,Pelagic
-White marlin,WMR,Pelagic
-Blue marlin,BMR,Pelagic
-Other billfish,BIL,Pelagic
-Greater amberjack,AMB,Pelagic
-Jacks,JCK,Pelagic
+Yellowfin tuna,YTN,Pelagic fish
+Bluefin tuna,BTN,Pelagic fish
+Little tunny,LTN,Pelagic fish
+Other tuna,OTN,Pelagic fish
+Swordfish,SWD,Pelagic fish
+White marlin,WMR,Pelagic fish
+Blue marlin,BMR,Pelagic fish
+Other billfish,BIL,Pelagic fish
+Greater amberjack,AMB,Pelagic fish
+Jacks,JCK,Pelagic fish
 King mackerel,KMK,Reef fish
-Spanish mackerel,SMK,Pelagic
-Spanish sardine,SAR,Pelagic
-Large pelagic fish,LPL,Pelagic
+Spanish mackerel,SMK,Pelagic fish
+Spanish sardine,SAR,Pelagic fish
+Large pelagic fish,LPL,Pelagic fish
 Deep water fish,DWF,Mesopelagic
-Menhaden,MEN,Pelagic
-Pinfish,PIN,Demersal
-Medium pelagic fish,MPL,Pelagic
-Small pelagic fish,SPL,Pelagic
+Menhaden,MEN,Pelagic fish
+Pinfish,PIN,Demersal fish
+Medium pelagic fish,MPL,Pelagic fish
+Small pelagic fish,SPL,Pelagic fish
 Blacktip shark,TIP,Reef fish
-Benthic feeding sharks,BEN,Demersal
-Large sharks,LGS,Pelagic
-Filter feeding sharks,FIL,Pelagic
-Small sharks,SMS,Pelagic
-Skates and rays,RAY,Demersal
+Benthic feeding sharks,BEN,Demersal fish
+Large sharks,LGS,Pelagic fish
+Filter feeding sharks,FIL,Pelagic fish
+Small sharks,SMS,Pelagic fish
+Skates and rays,RAY,Demersal fish
 Brown shrimp,BSH,Epibenthos
 White shrimp,WSH,Epibenthos
 Pink shrimp,PSH,Epibenthos

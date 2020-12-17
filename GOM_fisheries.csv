@@ -1,0 +1,34 @@
+Fishery,Index,Name,Location,IsRec,NumSubFleets
+SprtEst,1,Sport fishery,US estuaries,1,1
+GillnetEst,2,Gillnets,US estuaries,0,1
+TwlShpEst,3,Shrimp trap & trawl,US estuaries,0,1
+OytEst,4,Oysters,US fleet,0,1
+PotCrbEst,5,Crab pot,US estuaries,0,1
+SprtShf,6,Sport fishery,US shelf,0,1
+TwlShpShf,7,Shrimp trawl,US shelf,0,1
+PotCrbShf,8,Crab pot,US shelf,0,1
+PotLbtShf,9,Lobster pot,US shelf,0,1
+HLReefShf,10,Reef handline,US shelf,0,1
+LLReefShf,11,Reef longline,US shelf,0,1
+SeineMenShf,12,Menhaden seine,US shelf,0,1
+LLShkShf,13,Shark longline,US shelf,0,1
+LLPelgc,14,Pelagic longline,US fleet,0,1
+RoyalRed,15,Royal red,US fleet,0,1
+OtherUS,16,Misc. fleets,US fleet,0,1
+TwlShpMX,17,Shrimp trawl,Mexico,0,1
+LLReefMX,18,Reef longline,Mexico,0,1
+LLShkMX,19,Shark longline,Mexico,0,1
+GillnetMackMX,20,Mackerel gillnet,Mexico,0,1
+OctpsMX,21,Octopus,Mexico,0,1
+MixedMX,22,Other fisheries,Mexico,0,1
+MixedCuba,23,Mixed fisheries,Cuba,0,1
+DummyFlt1,24,DummyFlt1,NA,0,1
+DummyFlt2,25,DummyFlt2,NA,0,1
+DummyFlt3,26,DummyFlt3,NA,0,1
+DummyFlt4,27,DummyFlt4,NA,0,1
+DummyFlt5,28,DummyFlt5,NA,0,1
+DummyFlt6,29,DummyFlt6,NA,0,1
+DummyFlt7,30,DummyFlt7,NA,0,1
+DummyFlt8,31,DummyFlt8,NA,0,1
+DummyFlt9,32,DummyFlt9,NA,0,1
+DummyFlt10,33,DummyFlt10,NA,0,1
