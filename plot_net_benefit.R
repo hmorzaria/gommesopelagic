@@ -101,7 +101,7 @@ plot_net_benefit <- function(box.catch, west.fl.pol, value.group, common.habitat
     #facet_wrap(habitat_classification ~.)+
     theme_classic()+
     theme(legend.position = "none")+
-    ylab("Percent change undiscounted Net benefit") + 
+    ylab("Percent change in profit") + 
     xlab("Prey availability value") 
   
   ggsave("pprey_netb_ratio_plot.png", ratio.plot.net, device="png",width=10,dpi=350)
