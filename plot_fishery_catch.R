@@ -33,8 +33,10 @@ plot_fishery_catch <- function(fishery.ratio.data, gom_fisheries, fish.groups, i
     theme_classic()+
     theme(legend.position = "bottom")+
     ylab("Catch ratio") + 
-    xlab("Prey availability value") 
+    xlab("Prey availability value") +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   
-  ggsave("pprey_catch_ratio_plot.png", ratio.plot.meso, device="png",width=10,dpi=350)
+  
+  ggsave("pprey_catch_ratio_plot.png", ratio.plot.meso, device="png",height = 6, width=8)
   
 }

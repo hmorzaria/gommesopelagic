@@ -64,16 +64,18 @@ prey.mortality <- heatmap.data.prey.rev %>%
   ggplot(aes(x=availability, y=norm_end_mortality, fill=habitat_classification)) +
   #geom_area()+
   geom_col(position="stack", width = 1)+
-  scale_fill_manual(values=col.pal, name="Habitat classification") +
+  scale_fill_manual(values=col.pal, name="Prey habitat classification") +
   #scale_shape_manual(values=myshapes, name="Prey guild")+
   facet_wrap(long_name_pred ~.,scales="free_y")+
   theme_classic() +
   ylab("Predation mortality") + 
   xlab("Prey availability")+
   theme(legend.position="bottom")+
-  scale_x_continuous(breaks = c(-0.5,0,0.5,1),labels = c(0,0.2,0.4,0.6))
+  scale_x_continuous(breaks = c(-0.5,0,0.5,1),labels = c(0,0.2,0.4,0.6)) +
+  theme(text = element_text(size = 12, family = "Helvetica"))  
 
-ggsave(paste0("pprey_meso_mortality_plot_",this.run,".png"), prey.mortality, device="png",width=10,dpi=350)
+
+ggsave(paste0("pprey_meso_mortality_plot_",this.run,".png"), prey.mortality,  device="png",height = 9, width=11)
 
 heatmap.data.prey <- heatmap.prey %>% 
   filter(predator %in% fish.groups) %>% 
@@ -99,16 +101,18 @@ prey.mortality <- heatmap.data.prey.rev %>%
   ggplot(aes(x=availability, y=norm_end_mortality, fill=habitat_classification)) +
   #geom_area()+
   geom_col(position="stack", width = 1)+
-  scale_fill_manual(values=col.pal, name="Habitat classification") +
+  scale_fill_manual(values=col.pal, name="Prey habitat classification") +
   #scale_shape_manual(values=myshapes, name="Prey guild")+
   facet_wrap(long_name_pred ~.,scales="free_y")+
   theme_classic() +
   ylab("Predation mortality") + 
   xlab("Prey availability")+
   theme(legend.position="bottom")+
-  scale_x_continuous(breaks = c(-0.5,0,0.5,1),labels = c(0,0.2,0.4,0.6))
+  scale_x_continuous(breaks = c(-0.5,0,0.5,1),labels = c(0,0.2,0.4,0.6)) +
+  theme(text = element_text(size = 12, family = "Helvetica"))  
 
-ggsave(paste0("pprey_other_mortality_plot_",this.run,".png"), prey.mortality, device="png",width=10,dpi=350)
+
+ggsave(paste0("pprey_other_mortality_plot_",this.run,".png"), prey.mortality,  device="png",height = 9, width=11)
 
 
 }

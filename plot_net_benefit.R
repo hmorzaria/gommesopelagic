@@ -53,9 +53,11 @@ plot_net_benefit <- function(box.catch, west.fl.pol, value.group, common.habitat
     theme_classic()+
     theme(legend.position = "none")+
     ylab("Percent change undiscounted Net benefit") + 
-    xlab("Prey availability value") 
+    xlab("Prey availability value") +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   
-  ggsave("pprey_netb_ratio_plot_wf.png", ratio.plot.net.wf, device="png",width=10,dpi=350)
+  
+  ggsave("pprey_netb_ratio_plot_wf.png", ratio.plot.net.wf, device="png",height = 4, width=6)
   
   
   
@@ -102,9 +104,11 @@ plot_net_benefit <- function(box.catch, west.fl.pol, value.group, common.habitat
     theme_classic()+
     theme(legend.position = "none")+
     ylab("Percent change in profit") + 
-    xlab("Prey availability value") 
+    xlab("Prey availability value") +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   
-  ggsave("pprey_netb_ratio_plot.png", ratio.plot.net, device="png",width=10,dpi=350)
+  
+  ggsave("pprey_netb_ratio_plot.png", ratio.plot.net, device="png",height = 4, width=6)
   
 }
 

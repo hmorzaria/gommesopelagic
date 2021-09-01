@@ -33,8 +33,9 @@ plot_niche_width <- function(niche.data, atlantis.groups, common.habitat,
     theme_classic() +
     ylab("Trophic niche width") + 
     xlab("Prey availability")+
-    theme(legend.position="bottom")
+    theme(legend.position="bottom")+
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   
-  ggsave(file.name, niche.plot, device="png",width=10, dpi=300)
+  ggsave(file.name, niche.plot, device="png",height = 8, width=10)
   
 }

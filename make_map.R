@@ -6,7 +6,7 @@
 #' @author Hem Nalini Morzaria-Luna, hmorzarialuna@gmail.com
 
 
-make_map <- function(shape.file, file.name,scale.factor, bar.position,west.fl.pol) {
+make_map <- function(shape.file, file.name, scale.factor, bar.position,west.fl.pol) {
 
   model.shape <- readOGR(shape.file)
   
@@ -33,7 +33,7 @@ make_map <- function(shape.file, file.name,scale.factor, bar.position,west.fl.po
   
   model.map <- ggplot(data = world) +
     geom_sf() +
-    annotation_scale(location = "tl", width_hint = 0.5) +
+    annotation_scale(location = "tl", width_hint = 0.6, text_family = "Helvetica", text_cex = "0.8") +
     annotation_north_arrow(location = "br", which_north = "true", 
                            pad_x = unit(0.1, "in"), pad_y = unit(0.1, "in"),
                            style = north_arrow_fancy_orienteering) +
@@ -45,10 +45,11 @@ make_map <- function(shape.file, file.name,scale.factor, bar.position,west.fl.po
     ylab("Lat")+
     theme_bw()+
     theme(legend.position = "none")+
-    scale_fill_gradient(low="white", high="gray55")
+    scale_fill_gradient(low="white", high="gray55") +
+    theme(text = element_text(size = 11, family = "Helvetica"))  
   
   
-  ggsave(file.name, model.map, scale = 2, dpi = 400)
+  ggsave(file.name, model.map, width= 12, height = 10, units = "cm")
   
   return(model.map)
   

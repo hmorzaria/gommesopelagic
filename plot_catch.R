@@ -9,9 +9,7 @@
 
 plot_catch <- function(ratio.data, common.habitat, atlantis.groups, meso.predator.fish, demersal.sp, west.fl.pol){
   
-  meso.predator.fish <- meso.predators %>% 
-    pull(label)
-  
+ 
   ratio.plot.meso.data <- ratio.data %>% 
     group_by(preyvalue, long_name) %>% 
     summarise(tot_catch = sum(catch), tot_catch_base = sum(catch_base)) %>% 
@@ -38,13 +36,14 @@ plot_catch <- function(ratio.data, common.habitat, atlantis.groups, meso.predato
     theme_classic()+
     theme(legend.position = "bottom")+
     ylab("Biomass ratio") + 
-    xlab("Prey availability value") 
+    xlab("Prey availability value") +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   # stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
   #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
   
-  ggsave("pprey_catch_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=10,dpi=350)
+  ggsave("pprey_catch_ratio_pelagic_plot.png", ratio.plot.meso, device="png", height = 8, width=9)
   
-  ratio.plot.meso.data.wf <- biomass.ratio.data %>% 
+  ratio.plot.meso.data.wf <- ratio.data %>% 
     filter(Box %in% west.fl.pol) %>% 
     filter(long_name %in% meso.predator.fish) %>% 
     group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
@@ -68,9 +67,10 @@ plot_catch <- function(ratio.data, common.habitat, atlantis.groups, meso.predato
     theme_classic()+
     theme(legend.position = "bottom")+
     ylab("Biomass ratio") + 
-    xlab("Prey availability value") 
+    xlab("Prey availability value") +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
 
-  ggsave("pprey_catch_ratio_pelagic_plot_wf.png", ratio.plot.meso.wf, device="png",width=10,dpi=350)
+  ggsave("pprey_catch_ratio_pelagic_plot_wf.png", ratio.plot.meso.wf, device="png",height = 8, width=9)
   
   
   col.pal2 <- c(red.pal1[6],red.pal1[7],red.pal1[4],red.pal1[3], red.pal1[2],red.pal1[5])
@@ -101,12 +101,13 @@ plot_catch <- function(ratio.data, common.habitat, atlantis.groups, meso.predato
     theme_classic()+
     theme(legend.position = "bottom")+
     ylab("Biomass ratio") + 
-    xlab("Prey availability value")
+    xlab("Prey availability value") +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   
-  ggsave("pprey_catch_ratio_plot.png", ratio.plot.all, device="png",width=11, dpi=300)
+  ggsave("pprey_catch_ratio_plot.png", ratio.plot.all, device="png",height = 8, width=9)
   
   
-  ratio.data.all.wf <- biomass.ratio.data %>% 
+  ratio.data.all.wf <- ratio.data %>% 
     filter(Box %in% west.fl.pol) %>% 
     filter(!long_name %in% meso.predators.dem) %>% 
     group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
@@ -128,9 +129,10 @@ plot_catch <- function(ratio.data, common.habitat, atlantis.groups, meso.predato
     theme(legend.position = "bottom")+
     labs(color="Habitat classification")+
     ylab("Biomass ratio") + 
-    xlab("Prey availability value")  
+    xlab("Prey availability value")  +
+    theme(text = element_text(size = 12, family = "Helvetica"))  
   
-  ggsave("pprey_catch_ratio_plot_wf.png", ratio.plot.all.wf, device="png",width=11, dpi=300)
+  ggsave("pprey_catch_ratio_plot_wf.png", ratio.plot.all.wf, device="png",height = 8, width=9)
   
   
   

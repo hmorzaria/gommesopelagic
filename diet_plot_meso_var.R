@@ -190,9 +190,16 @@ ggraph.avail <- ggraph(routes_tidy, layout = "graphopt") +
     geom_edge_link(aes(width = weight), alpha = 0.8, edge_colour = "grey66", show.legend = F) + 
     scale_color_manual(values = mycols2, name = "Habitat classification")+
     scale_edge_width(range = c(0.5, 2)) +
-    geom_node_text(aes(label = label), repel = TRUE) +
+    geom_node_text(aes(label = label), size= 3, repel = TRUE) +
     labs(edge_width = "Availability") +
-    theme_graph()
+    theme_graph() +
+    theme(legend.position="top")
+
+
+ggsave(filename, plot = ggraph.avail, device = "png", width = 10, height = 5)
+ggsave(filename, plot = ggraph.avail, device = "png", width = 8, height = 6)
+
+return(ggraph.avail)
 
   #see https://mran.microsoft.com/snapshot/2017-03-06/web/packages/ggCompNet/vignettes/examples-from-paper.html
 #creates network with nodes and edges
@@ -237,9 +244,6 @@ ggraph.avail <- ggraph(routes_tidy, layout = "graphopt") +
   #                     alpha=0.8, edge.alpha = 0.7,vjust = -0.6, mode = "kamadakawai")
    
 
-  ggsave(filename, plot = ggraph.avail, device = "png", width = 11, height = 6)
-  
-  return(ggraph.avail)
-}
+ }
 
 

@@ -19,10 +19,9 @@ plot_biomass <- function(biomass.ratio.data,west.fl.pol,common.habitat,meso.pred
       mutate(ratio = biomass/biomass_base) %>% 
       left_join(common.habitat, by = "long_name") %>% 
       filter(grepl("pelagic",habitat_classification) | grepl("Pelagic",habitat_classification) |   grepl("Reef",habitat_classification)) %>% 
-      filter(long_name %in% meso.predator.fish) %>% 
-      filter(!long_name %in% demersal.sp) %>% 
+      filter(long_name %in% demersal.sp) %>% 
       mutate(habitat_classification = as.factor(habitat_classification))
-     
+    
     red.pal1 <- redmonder.pal(8,"qMSOSlp")
     
     col.pal <- c(red.pal1[3],red.pal1[2],red.pal1[5])
@@ -35,13 +34,48 @@ plot_biomass <- function(biomass.ratio.data,west.fl.pol,common.habitat,meso.pred
       facet_wrap(long_name ~., scales="free_y")+
       #facet_wrap(habitat_classification ~.)+
       theme_classic()+
+      theme(legend.position = "none")+
+      ylab("Biomass ratio") + 
+      xlab("Prey availability value") +
+      theme(text = element_text(size = 12, family = "Helvetica"))  
+    
+      ggsave("pprey_biomass_ratio_meso_plot.png", ratio.plot.meso, device="png",height = 3, width=10)
+    
+    
+    ratio.plot.meso.data <- biomass.ratio.data %>% 
+      group_by(Code,preyvalue,scenario,scenario_base,long_name,guild,habit) %>% 
+      summarise(biomass=sum(biomass),biomass_base = sum(biomass_base)) %>% 
+      ungroup %>% 
+      mutate(ratio = biomass/biomass_base) %>% 
+      left_join(common.habitat, by = "long_name") %>% 
+      filter(grepl("pelagic",habitat_classification) | grepl("Pelagic",habitat_classification) |   grepl("Reef",habitat_classification)) %>% 
+      filter(long_name %in% meso.predator.fish) %>% 
+      filter(!long_name %in% demersal.sp) %>% 
+      mutate(habitat_classification = as.factor(habitat_classification))
+     
+    red.pal1 <- redmonder.pal(8,"qMSOSlp")
+    
+    col.pal <- c(red.pal1[3],red.pal1[2],red.pal1[5])
+    #col.pal <- c(red.pal1[6],red.pal1[8],red.pal1[7],red.pal1[4], red.pal1[3],red.pal1[2],red.pal1[5])
+    
+    ratio.plot.meso <- ratio.plot.meso.data %>% 
+      ggplot(aes(x=preyvalue, y=ratio, color = habitat_classification)) + 
+      geom_point()+
+      scale_color_manual(values=col.pal, name = "Prey habitat classification")+
+      facet_wrap(long_name ~., scales="free_y")+
+      #facet_wrap(habitat_classification ~.)+
+      theme_classic()+
       theme(legend.position = "bottom")+
       ylab("Biomass ratio") + 
-      xlab("Prey availability value") 
+      xlab("Prey availability value") +
+      theme(text = element_text(size = 12, family = "Helvetica"))  
+    
+    # scale_y_continuous(limits=c(0.94,1.02),breaks=c(0.95,0.96,0.97,0.98,0.99,1,1.05))
+    
     # stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
     #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
     
-    ggsave("pprey_biomass_ratio_pelagic_plot.png", ratio.plot.meso, device="png",width=10,dpi=350)
+    ggsave("pprey_biomass_ratio_pelagic_plot.png", ratio.plot.meso, device="png",height = 8, width=11)
     
     ratio.plot.meso.data.wf <- biomass.ratio.data %>% 
       filter(Box %in% west.fl.pol) %>% 
@@ -66,11 +100,13 @@ plot_biomass <- function(biomass.ratio.data,west.fl.pol,common.habitat,meso.pred
       theme_classic()+
       theme(legend.position = "bottom")+
       ylab("Biomass ratio") + 
-      xlab("Prey availability value") 
+      xlab("Prey availability value") +
+      theme(text = element_text(size = 12, family = "Helvetica"))  
+    
     # stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")  #quadratic
     #  stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE)+
     
-    ggsave("pprey_biomass_ratio_pelagic_plot_wf.png", ratio.plot.meso.wf, device="png",width=10,dpi=350)
+    ggsave("pprey_biomass_ratio_pelagic_plot_wf.png", ratio.plot.meso.wf, device="png",height = 7, width=10)
     
     
     col.pal2 <- c(red.pal1[6],red.pal1[7],red.pal1[4],red.pal1[3], red.pal1[2],red.pal1[5])
@@ -102,9 +138,11 @@ plot_biomass <- function(biomass.ratio.data,west.fl.pol,common.habitat,meso.pred
       theme_classic()+
       theme(legend.position = "bottom")+
       ylab("Biomass ratio") + 
-      xlab("Prey availability value")
+      xlab("Prey availability value") +
+      theme(text = element_text(size = 12, family = "Helvetica"))  
     
-    ggsave("pprey_biomass_ratio_plot.png", ratio.plot.all, device="png",width=11, dpi=300)
+    
+    ggsave("pprey_biomass_ratio_plot.png", ratio.plot.all, device="png",height = 8,width=11)
     
    
     ratio.data.all.wf <- biomass.ratio.data %>% 
@@ -129,10 +167,13 @@ plot_biomass <- function(biomass.ratio.data,west.fl.pol,common.habitat,meso.pred
       theme(legend.position = "bottom")+
       labs(color="Habitat classification")+
       ylab("Biomass ratio") + 
-      xlab("Prey availability value") #+
+      xlab("Prey availability value") +
+      theme(text = element_text(size = 12, family = "Helvetica"))  
+    
     #stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1, colour="grey50")   
     
-    ggsave("pprey_biomass_ratio_plot_wf.png", ratio.plot.all.wf, device="png",width=11, dpi=300)
+  #  ggsave("pprey_biomass_ratio_plot_wf.png", ratio.plot.all.wf, device="png",height = 5, width=12, dpi=300)
+    ggsave("pprey_biomass_ratio_plot_wf.png", ratio.plot.all.wf, device="png",height = 8, width=12)
     
     
 }
